@@ -1,7 +1,6 @@
 #include "unityTestSuite/unity.h"
 #include "unityTestSuite/unity.c"
 #include "library.h"
-#include "library.c"
 #include <stdbool.h>
 #include <limits.h>
 
@@ -10,9 +9,19 @@ void setUp(){
 }
 
 void test_correctCMDLineInput(){
-    TEST_ASSERT_EQUAL_INT(true, correctCMDLineInput(2));
-    TEST_ASSERT_EQUAL_INT(false, correctCMDLineInput(1));
-    TEST_ASSERT_EQUAL_INT(false, correctCMDLineInput(INT_MAX));
+    TEST_ASSERT(correctCMDLineInput(2) == true);
+    TEST_ASSERT(correctCMDLineInput(1) == false);
+    TEST_ASSERT(correctCMDLineInput(INT_MAX) == false);
+}
+
+void test_checkForComments(){
+    bool trueBool=true;
+
+    TEST_ASSERT(isComment("  //", 4, &trueBool) == true);
+    TEST_ASSERT(isComment("  /*", 4, &trueBool) == true);
+    TEST_ASSERT(isComment("for()", 5, &trueBool) == false);
+    TEST_ASSERT(isComment("  while()", 9, &trueBool) == false);
+    TEST_ASSERT(isComment("", 0, &trueBool) == false);
 }
 
 
@@ -24,6 +33,8 @@ int main(){
     UNITY_BEGIN();
 
     RUN_TEST(test_correctCMDLineInput);
+
+    RUN_TEST(test_checkForComments);
 
     return UNITY_END();
 }
