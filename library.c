@@ -11,3 +11,22 @@ bool correctCMDLineInput(int argc){
 
     return false;
 }
+
+bool isComment(char* lineOfCode, int lineSize, bool* isMultiLineComment){
+    for(int i=0; i < lineSize; ++i){
+        if(lineOfCode[i] == ' '){
+            continue;
+        }
+        
+        //Confirm '/' can only be used for comments.
+        if(lineOfCode[i] == '/'){
+            if(lineOfCode[i+1] == '*'){
+                *isMultiLineComment=true;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+}

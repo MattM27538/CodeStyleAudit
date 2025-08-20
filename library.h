@@ -5,4 +5,6 @@
 
 bool correctCMDLineInput(int argc);
 
+bool isComment(char* lineOfCode, int LineSize, bool* isMultiLineComment);
+
 #endif
