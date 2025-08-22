@@ -1,6 +1,9 @@
 #include <stdbool.h>
 #include "library.h"
 
+//DELETE ME when done testing.
+#include <stdio.h>
+
 bool correctCMDLineInput(int argc){
     if(argc == 2){
         return true;
@@ -13,6 +16,8 @@ bool correctCMDLineInput(int argc){
 }
 
 bool isComment(char* lineOfCode, int lineSize, bool* isMultiLineComment){
+    // printf("Line is of size %d\n", lineSize);
+
     for(int i=0; i < lineSize; ++i){
         if(lineOfCode[i] == ' '){
             continue;
@@ -28,10 +33,10 @@ bool isComment(char* lineOfCode, int lineSize, bool* isMultiLineComment){
         }
 
         if(lineOfCode[i] == '*' && lineOfCode[i+1] == '/'){
-            IsMultiLineComment=false;
+            *isMultiLineComment=false;
             return true;
         }
-
-        return false;
     }
+
+    return false;
 }
