@@ -7,15 +7,39 @@
 
 //Consider making this a singleton
 struct LineInformation{
-    //Consider putting these in a struct.
-    const uint8_t maxLineSize;
-    uint8_t currentLineSize;
+    const int8_t maxLineSize;
+    int8_t currentLineSize;
     long long lineNumber;
     bool continueReadingFile;
+    bool isMultiLineComment;
 };
 
+///Final version
+// bool isComment(char* lineOfCode, Lineinformation* Lineinformation){
+//     for(int i=0; i < Lineinformation->currentLineSize; ++i){
+//         if(lineOfCode[i] == ' '){
+//             continue;
+//         }
+
+//         if(lineOfCode[i] == '/'){
+//             if(lineOfCode[i+1] == '/'){
+
+//             }
+//             else if(lineOfCode[i+1] == '*'){
+//                 Lineinformation.isMultiLineComment=true;
+//             }
+
+//             return true;
+//         }
+
+//         return false;
+//     }
+// }
+
+
+
 bool readLine(FILE* codeFile, struct LineInformation* LineInformation){
-    // char lineOfCode[100];
+    char lineOfCode[100];
     char charInCode;
     
     //Might be an issue with while != EOF CHECK
@@ -44,8 +68,15 @@ bool readLine(FILE* codeFile, struct LineInformation* LineInformation){
         
         // fputc(charInCode, stdout);
         
-        // lineOfCode[LineInformation->currentLineSize]=charInCode;
+        lineOfCode[LineInformation->currentLineSize]=charInCode;
     }
+
+    // if lineOfCode is comment skip. if lineOfCode is multiline keep reading until comment ends.
+    if(isComment(lineOfCode, lineInformation->currentLineSize, lineInformation->isMultiLineComment)
+       || lineInformation->isMultiLineComment)
+    {
+        return true;
+    } 
     
     // fputc('\n', stdout);
     LineInformation->currentLineSize=0;
@@ -62,7 +93,8 @@ int main(int argc, char* argv[]){
     const char* codeFileName=argv[1];
     const char* readOnly="r";
 
-    struct LineInformation LineInformation={.maxLineSize=100, .currentLineSize=0, .lineNumber=1, .continueReadingFile=true};
+    struct LineInformation LineInformation={.maxLineSize=100, .currentLineSize=0, 
+           .lineNumber=1, .continueReadingFile=true, .isMultiLineComment=false};
 
     codeFile=fopen(codeFileName, readOnly);
     
