@@ -27,6 +27,11 @@ bool isComment(char* lineOfCode, int lineSize, bool* isMultiLineComment){
             return true;
         }
 
+        if(lineOfCode[i] == '*' && lineOfCode[i+1] == '/'){
+            IsMultiLineComment=false;
+            return true;
+        }
+
         return false;
     }
 }
