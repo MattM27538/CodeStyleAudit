@@ -38,49 +38,53 @@ struct LineInformation{
 
 
 
-bool readLine(FILE* codeFile, struct LineInformation* LineInformation){
+bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
     char lineOfCode[100];
     char charInCode;
     
     //Might be an issue with while != EOF CHECK
     // while((charInCode=fgetc(codeFile)) != EOF){
-    for(int i=0; i < LineInformation->maxLineSize; ++i){
+    for(int i=0; i < lineInformation->maxLineSize; ++i){
         charInCode=fgetc(codeFile);
         
         if(charInCode == EOF){
-            LineInformation->continueReadingFile=false;
+            lineInformation->continueReadingFile=false;
             //Call function to check final line here.
-            return LineInformation->continueReadingFile;
+            return lineInformation->continueReadingFile;
         }
         
         if(charInCode == '\n'){
-            LineInformation->currentLineSize=0;
-            ++LineInformation->lineNumber;
             break;
         }
         
-        ++LineInformation->currentLineSize;
+        ++lineInformation->currentLineSize;
         
-        if(LineInformation->currentLineSize > LineInformation->maxLineSize){
-            printf("Line %lld exceeds limit of 100 characters. Correct your code and recompile.", LineInformation->lineNumber);
+        if(lineInformation->currentLineSize > lineInformation->maxLineSize){
+            printf("Line %lld exceeds limit of 100 characters. Correct your code and recompile.", lineInformation->lineNumber);
             exit(1);
         }
         
         // fputc(charInCode, stdout);
         
-        lineOfCode[LineInformation->currentLineSize]=charInCode;
+        lineOfCode[lineInformation->currentLineSize]=charInCode;
     }
 
     // if lineOfCode is comment skip. if lineOfCode is multiline keep reading until comment ends.
-    if(isComment(lineOfCode, lineInformation->currentLineSize, lineInformation->isMultiLineComment)
+    if(isComment(lineOfCode, lineInformation->currentLineSize, &lineInformation->isMultiLineComment)
        || lineInformation->isMultiLineComment)
-    {
+    {   
+        // printf("%lld", lineInformation->lineNumber);
+        //DRY consider creating function for reset.
+        lineInformation->currentLineSize=0;
+        ++lineInformation->lineNumber;
         return true;
     } 
     
     // fputc('\n', stdout);
-    LineInformation->currentLineSize=0;
-    return LineInformation->continueReadingFile;
+    //DRY consider creating function for reset.
+    lineInformation->currentLineSize=0;
+    ++lineInformation->lineNumber;
+    return lineInformation->continueReadingFile;
 }
 
 
