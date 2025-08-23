@@ -19,6 +19,8 @@ void test_checkForComments(){
 
     TEST_ASSERT(isComment("  //", 4, &trueBool) == true);
     TEST_ASSERT(isComment("  /*", 4, &trueBool) == true);
+    TEST_ASSERT(isComment("  //*", 5, &trueBool) == true);
+    TEST_ASSERT(isComment("char myString[5]=\"//*\"", 16, &trueBool) == false);
     TEST_ASSERT(isComment("for()", 5, &trueBool) == false);
     TEST_ASSERT(isComment("  while()", 9, &trueBool) == false);
     TEST_ASSERT(isComment("", 0, &trueBool) == false);
