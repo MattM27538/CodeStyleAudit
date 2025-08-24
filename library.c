@@ -45,7 +45,7 @@ bool isComment(char* lineOfCode, const int lineSize, bool* isMultiLineComment){
 bool isWhileLoop(const char* lineOfCode, const int lineSize){
     const char* whileLiteral="while";
 
-    char placeHolderName[6];
+    char startOfLineOfCode[6];
 
     for(int i=0; i < lineSize; ++i){
         if(lineOfCode[i] == ' '){
@@ -59,14 +59,44 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
             }
             
             // printf("%zu ", i+j);
-            placeHolderName[j]=lineOfCode[i+j];
+            startOfLineOfCode[j]=lineOfCode[i+j];
         }
 
-        placeHolderName[5]='\0';
+        startOfLineOfCode[5]='\0';
         // printf("%d\n", strncmp(whileLiteral, placeHolderName, strlen(whileLiteral)));
         // printf("%s =? ", placeHolderName);
         // printf("%s\n", whileLiteral);
-        return !(strncmp(whileLiteral, placeHolderName, strlen(whileLiteral)));
+        return !(strncmp(whileLiteral, startOfLineOfCode, strlen(whileLiteral)));
+    }
+
+    return false;
+}
+
+bool isForLoop(const char* lineOfCode, const int lineSize){
+    const char* forLiteral="for";
+
+    char startOfLineOfCode[4];
+
+    for(int i=0; i < lineSize; ++i){
+        if(lineOfCode[i] == ' '){
+                continue;
+        }
+
+        for(size_t j=0; j<strlen(forLiteral); ++j){
+            if(lineOfCode[i] == '\n'){
+                puts("returned false\n");
+                return false;
+            }
+            
+            // printf("%zu ", i+j);
+            startOfLineOfCode[j]=lineOfCode[i+j];
+        }
+
+        startOfLineOfCode[3]='\0';
+        // printf("%d\n", strncmp(whileLiteral, placeHolderName, strlen(whileLiteral)));
+        // printf("%s =? ", placeHolderName);
+        // printf("%s\n", whileLiteral);
+        return !(strncmp(forLiteral, startOfLineOfCode, strlen(forLiteral)));
     }
 
     return false;
