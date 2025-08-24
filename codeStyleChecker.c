@@ -57,6 +57,7 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
             break;
         }
         
+        lineOfCode[lineInformation->currentLineSize]=charInCode;
         ++lineInformation->currentLineSize;
         
         if(lineInformation->currentLineSize > lineInformation->maxLineSize){
@@ -66,22 +67,36 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
         
         // fputc(charInCode, stdout);
         
-        lineOfCode[lineInformation->currentLineSize]=charInCode;
     }
 
+    printf("%c\n", lineOfCode[0]);
     // if lineOfCode is comment skip. if lineOfCode is multiline keep reading until comment ends.
     if(isComment(lineOfCode, lineInformation->currentLineSize, &lineInformation->isMultiLineComment)
        || lineInformation->isMultiLineComment)
     {   
-        // printf("%lld", lineInformation->lineNumber);
-        //DRY consider creating function for reset.
+        // printf("%lld\n", lineInformation->lineNumber);
+        //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
         return true;
-    } 
+    }
+    else if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
+        printf("line %lld has while\n", lineInformation->lineNumber);
+        //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
+        lineInformation->currentLineSize=0;
+        ++lineInformation->lineNumber;
+        return true;
+    }
+    else if(isForLoop(lineOfCode, lineInformation->currentLineSize)){
+        printf("line %lld has for\n", lineInformation->lineNumber);
+        //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
+        lineInformation->currentLineSize=0;
+        ++lineInformation->lineNumber;
+        return true;
+    }
     
     // fputc('\n', stdout);
-    //DRY consider creating function for reset.
+    //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
     lineInformation->currentLineSize=0;
     ++lineInformation->lineNumber;
     return lineInformation->continueReadingFile;
