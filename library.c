@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "library.h"
 #include <string.h>
+#include <stdint.h>
 
 //DELETE ME when done testing.
 #include <stdio.h>
@@ -41,6 +42,49 @@ bool isComment(char* lineOfCode, const int lineSize, bool* isMultiLineComment){
 
     return false;
 }
+
+void isCorrectWhileFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber){
+    for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
+        if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
+            printf("Error on line %lld: white space found after '('.\n", lineNumber);
+        }
+        else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
+            printf("Error on line %lld: white space found before ')'.\n", lineNumber);
+        }
+        else{
+            switch(lineOfCode[charInLine]){
+                case '<':
+                case '>':
+                case '!':
+                    {
+                        if(lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' '){
+
+                        }
+                        else if(lineOfCode[charInLine+1] != ' '){
+
+                        }
+                        //Check for spacing before and after comparison operator
+                    }
+                break;
+                case '=':
+                    {
+                         if(lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' '){
+                            printf("Error on line %lld: white space not found after '=='.\n", lineNumber);
+                        }
+                        else if(lineOfCode[charInLine-1] == '=' && lineOfCode[charInLine-2] != ' '){
+                            printf("Error on line %lld: white space not found before '=='.\n", lineNumber);
+                        }
+                        //Check for accidental assignment operator
+                        // else if (){
+                        //     printf("Error on line %lld: assignment operator found.\n", lineNumber);
+                        // }
+                    }
+
+            }
+        }
+    }
+}
+
 
 bool isWhileLoop(const char* lineOfCode, const int lineSize){
     const char* whileLiteral="while";
