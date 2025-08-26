@@ -57,13 +57,14 @@ void isCorrectWhileFormat(const char* lineOfCode, int8_t currentLineSize, long l
                 case '>':
                 case '!':
                     {
-                        if(lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' '){
-
+                        if(lineOfCode[charInLine-1] != ' '){
+                            printf("Error on line %lld: white space not found before comparison operator.\n", lineNumber);
                         }
-                        else if(lineOfCode[charInLine+1] != ' '){
 
+                        if((lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' ')
+                           || (lineOfCode[charInLine+1] != ' ')){
+                            printf("Error on line %lld: white space not found after comparison operator.\n", lineNumber);
                         }
-                        //Check for spacing before and after comparison operator
                     }
                 break;
                 case '=':
