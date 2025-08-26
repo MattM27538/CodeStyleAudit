@@ -83,6 +83,7 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
     else if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
         printf("line %lld has while\n", lineInformation->lineNumber);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
+        isCorrectWhileFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
         return true;
