@@ -2,10 +2,18 @@ CC=gcc
 OPTIMIZATION=02
 CFLAGS=-Wall -Werror -Wextra -Wpedantic -std=c11 $(OPTIMIZATION)
 
-all: codeStyleChecker
+CFILES=codeStyleChecker.o library.o
+OBJECTFILES=
 
-codeStyleChecker : codeStyleChecker.c
-	$(CC) $(CFLAGS) codeStyleChecker.c library.c -o codeStyleChecker
+BINARY=codeStyleChecker
+
+all : $(BINARY)
+
+$(BINARY) : $(OBJECTFILES)
+	$(CC) -o $@ $^
+
+%o : %c
+	$(CC) $(CFLAGS) -c -o $@ $^ 
 
 clean:
-	rm codeStyleChecker
+	rm -rf $(BINARY) $(OBJECTFILES)
