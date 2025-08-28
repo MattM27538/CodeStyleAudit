@@ -90,6 +90,7 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
     }
     else if(isForLoop(lineOfCode, lineInformation->currentLineSize)){
         printf("line %lld has for\n", lineInformation->lineNumber);
+        isCorrectForLoopFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
