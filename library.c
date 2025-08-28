@@ -117,6 +117,23 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
     return false;
 }
 
+void isCorrectForLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber){
+    for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
+        if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
+            printf("Error on line %lld: white space found after '(' on column %d.\n", lineNumber, charInLine+1);
+        }
+        else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
+            printf("Error on line %lld: white space found before ')' on column %d.\n", lineNumber, charInLine+1);
+        }
+        else if(lineOfCode[charInLine] == ';' && lineOfCode[charInLine-1] == ' '){
+            printf("Error on line %lld: white space found before ';' on column %d.\n", lineNumber, charInLine+1);
+        }
+        else if(lineOfCode[charInLine] == ';' && lineOfCode[charInLine+1] != ' '){
+            printf("Error on line %lld: white space not found after ';' on column %d.\n", lineNumber, charInLine+1);
+        }
+    }
+}
+
 bool isForLoop(const char* lineOfCode, const int lineSize){
     const char* forLiteral="for";
 
