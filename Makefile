@@ -1,9 +1,10 @@
 CC=gcc
-OPTIMIZATION=02
-CFLAGS=-Wall -Werror -Wextra -Wpedantic -std=c11 $(OPTIMIZATION)
+INCDIRS=-I.
+OPTIMIZATION=-O2
+CFLAGS=-Wall -Werror -Wextra -Wpedantic -std=c11 -g $(INCDIRS) $(OPTIMIZATION)
 
-CFILES=codeStyleChecker.o library.o
-OBJECTFILES=
+CFILES=codeStyleChecker.c library.c
+OBJECTFILES=codeStyleChecker.o library.o
 
 BINARY=codeStyleChecker
 
@@ -13,7 +14,7 @@ $(BINARY) : $(OBJECTFILES)
 	$(CC) -o $@ $^
 
 %o : %c
-	$(CC) $(CFLAGS) -c -o $@ $^ 
+	$(CC) $(CFLAGS) -c -o $@ $^
 
 clean:
 	rm -rf $(BINARY) $(OBJECTFILES)
