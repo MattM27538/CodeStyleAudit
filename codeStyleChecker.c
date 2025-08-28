@@ -14,30 +14,6 @@ struct LineInformation{
     bool isMultiLineComment;
 };
 
-///Final version
-// bool isComment(char* lineOfCode, Lineinformation* Lineinformation){
-//     for(int i=0; i < Lineinformation->currentLineSize; ++i){
-//         if(lineOfCode[i] == ' '){
-//             continue;
-//         }
-
-//         if(lineOfCode[i] == '/'){
-//             if(lineOfCode[i+1] == '/'){
-
-//             }
-//             else if(lineOfCode[i+1] == '*'){
-//                 Lineinformation.isMultiLineComment=true;
-//             }
-
-//             return true;
-//         }
-
-//         return false;
-//     }
-// }
-
-
-
 bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
     char lineOfCode[100];
     char charInCode;
@@ -83,7 +59,7 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
     else if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
         printf("line %lld has while\n", lineInformation->lineNumber);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
-        isCorrectWhileFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
+        isCorrectWhileLoopFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
         return true;

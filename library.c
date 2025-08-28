@@ -43,7 +43,7 @@ bool isComment(char* lineOfCode, const int lineSize, bool* isMultiLineComment){
     return false;
 }
 
-void isCorrectWhileFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber){
+void isCorrectWhileLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber){
     for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
         if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
             printf("Error on line %lld: white space found after '('.\n", lineNumber);

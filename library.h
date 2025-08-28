@@ -12,7 +12,7 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize);
 
 bool isForLoop(const char* lineOfCode, const int lineSize);
 
-void isCorrectWhileFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber);
+void isCorrectWhileLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber);
 
 void isCorrectForLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber);
 
