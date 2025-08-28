@@ -29,6 +29,8 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
             return lineInformation->continueReadingFile;
         }
         
+        //Entire Program is off by 1 index because of not incrementing currentLineSize here
+        //Decide if you want to change this.
         if(charInCode == '\n'){
             break;
         }
@@ -45,7 +47,12 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
         
     }
 
-    printf("%c\n", lineOfCode[0]);
+    // printf("%c\n", lineOfCode[0]);
+
+    if(isWhiteSpaceAtEndOfLine(lineOfCode, lineInformation->currentLineSize)){
+        printf("Syntax Error: Found trailing whitespace on line %lld\n", lineInformation->lineNumber);
+    }
+    
     // if lineOfCode is comment skip. if lineOfCode is multiline keep reading until comment ends.
     if(isComment(lineOfCode, lineInformation->currentLineSize, &lineInformation->isMultiLineComment)
        || lineInformation->isMultiLineComment)
@@ -57,7 +64,7 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
         return true;
     }
     else if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
-        printf("line %lld has while\n", lineInformation->lineNumber);
+        // printf("line %lld has while\n", lineInformation->lineNumber);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
         isCorrectWhileLoopFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
         lineInformation->currentLineSize=0;
@@ -65,14 +72,14 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
         return true;
     }
     else if(isForLoop(lineOfCode, lineInformation->currentLineSize)){
-        printf("line %lld has for\n", lineInformation->lineNumber);
+        // printf("line %lld has for\n", lineInformation->lineNumber);
         isCorrectForLoopFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
         return true;
     }
-    
+
     // fputc('\n', stdout);
     //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
     lineInformation->currentLineSize=0;

@@ -16,4 +16,6 @@ void isCorrectWhileLoopFormat(const char* lineOfCode, int8_t currentLineSize, lo
 
 void isCorrectForLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber);
 
+bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, int8_t currentLineSize);
+
 #endif

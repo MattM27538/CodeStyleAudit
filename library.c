@@ -163,3 +163,12 @@ bool isForLoop(const char* lineOfCode, const int lineSize){
 
     return false;
 }
+
+bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, int8_t currentLineSize){
+    //If increment for \n char is added this needs to change to currentLineSize-1
+    if((lineOfCode[currentLineSize-2] == ' ') && (currentLineSize != 1)){
+        return true;
+    }
+
+    return false;
+}
