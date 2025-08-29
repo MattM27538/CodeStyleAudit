@@ -33,6 +33,12 @@ void testIsWhileLoop(){
     TEST_ASSERT(isWhileLoop("/*while(1)*/", 12) == false);
 }
 
+void testIsWhiteSpaceAtEndOfLine(){
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine("", 1) == false);
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine("  ", 3) == true);
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){}", 10) == false);
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){} ", 11) == true);
+}
 
 void tearDown(){
 
@@ -46,6 +52,8 @@ int main(){
     RUN_TEST(testCheckForComments);
 
     RUN_TEST(testIsWhileLoop);
+    
+    RUN_TEST(testIsWhiteSpaceAtEndOfLine);
 
     return UNITY_END();
 }
