@@ -56,16 +56,16 @@ bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLi
     return false;
 }
 
-void isCorrectWhileLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber){
-    for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
+void isCorrectWhileLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
+    for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
         // if(checkForParenthesisAndWhiteSpace(lineOfCode, charInLine)){
         //     continue;
         // };
         if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
-            printf("Error on line %lld: white space found after '('.\n", lineNumber);
+            printf("Error on line %lld: white space found after '('.\n", lineInformation->lineNumber);
         }
         else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
-            printf("Error on line %lld: white space found before ')'.\n", lineNumber);
+            printf("Error on line %lld: white space found before ')'.\n", lineInformation->lineNumber);
         }
         else{
             switch(lineOfCode[charInLine]){
@@ -74,22 +74,22 @@ void isCorrectWhileLoopFormat(const char* lineOfCode, const int8_t currentLineSi
                 case '!':
                     {
                         if(lineOfCode[charInLine-1] != ' '){
-                            printf("Error on line %lld: white space not found before comparison operator.\n", lineNumber);
+                            printf("Error on line %lld: white space not found before comparison operator.\n", lineInformation->lineNumber);
                         }
 
                         if((lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' ')
                            || (lineOfCode[charInLine+1] != ' ')){
-                            printf("Error on line %lld: white space not found after comparison operator.\n", lineNumber);
+                            printf("Error on line %lld: white space not found after comparison operator.\n", lineInformation->lineNumber);
                         }
                     }
                 break;
                 case '=':
                     {
                          if(lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' '){
-                            printf("Error on line %lld: white space not found after '=='.\n", lineNumber);
+                            printf("Error on line %lld: white space not found after '=='.\n", lineInformation->lineNumber);
                         }
                         else if(lineOfCode[charInLine-1] == '=' && lineOfCode[charInLine-2] != ' '){
-                            printf("Error on line %lld: white space not found before '=='.\n", lineNumber);
+                            printf("Error on line %lld: white space not found before '=='.\n", lineInformation->lineNumber);
                         }
                         //Check for accidental assignment operator
                         // else if (){
@@ -104,9 +104,9 @@ void isCorrectWhileLoopFormat(const char* lineOfCode, const int8_t currentLineSi
 
 
 bool isWhileLoop(const char* lineOfCode, const int lineSize){
-    const char* whileStringLiteral="while";
+    const char* whileStringLiteral="while(";
 
-    char startOfLineOfCode[6];
+    char startOfLineOfCode[7];
 
     for(int i=0; i < lineSize; ++i){
         if(lineOfCode[i] == ' '){
@@ -122,7 +122,7 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
             startOfLineOfCode[j]=lineOfCode[i+j];
         }
 
-        startOfLineOfCode[5]='\0';
+        startOfLineOfCode[6]='\0';
 
         return !(strncmp(whileStringLiteral, startOfLineOfCode, strlen(whileStringLiteral)));
     }
@@ -130,27 +130,29 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
     return false;
 }
 
-void isCorrectForLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber){
-    for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
+void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
+    for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
         if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
-            printf("Error on line %lld: white space found after '(' on column %d.\n", lineNumber, charInLine+1);
+            printf("Error on line %lld: white space found after '(' on column %d.\n", lineInformation->lineNumber, charInLine+1);
         }
         else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
-            printf("Error on line %lld: white space found before ')' on column %d.\n", lineNumber, charInLine+1);
+            printf("Error on line %lld: white space found before ')' on column %d.\n", lineInformation->lineNumber, charInLine+1);
         }
         else if(lineOfCode[charInLine] == ';' && lineOfCode[charInLine-1] == ' '){
-            printf("Error on line %lld: white space found before ';' on column %d.\n", lineNumber, charInLine+1);
+            printf("Error on line %lld: white space found before ';' on column %d.\n", lineInformation->lineNumber, charInLine+1);
         }
         else if(lineOfCode[charInLine] == ';' && lineOfCode[charInLine+1] != ' '){
-            printf("Error on line %lld: white space not found after ';' on column %d.\n", lineNumber, charInLine+1);
+            printf("Error on line %lld: white space not found after ';' on column %d.\n", lineInformation->lineNumber, charInLine+1);
         }
     }
+
+    //Add switch statement/switch func call here
 }
 
 bool isForLoop(const char* lineOfCode, const int lineSize){
-    const char* forStringLiteral="for";
+    const char* forStringLiteral="for(";
 
-    char startOfLineOfCode[4];
+    char startOfLineOfCode[5];
 
     for(int i=0; i < lineSize; ++i){
         if(lineOfCode[i] == ' '){
@@ -166,7 +168,7 @@ bool isForLoop(const char* lineOfCode, const int lineSize){
             startOfLineOfCode[j]=lineOfCode[i+j];
         }
 
-        startOfLineOfCode[3]='\0';
+        startOfLineOfCode[4]='\0';
         
         return !(strncmp(forStringLiteral, startOfLineOfCode, strlen(forStringLiteral)));
     }

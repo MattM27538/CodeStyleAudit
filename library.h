@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include "lineInformation.h"
 
 #ifndef library_h
 #define library_h
@@ -15,9 +16,9 @@ bool isForLoop(const char* lineOfCode, const int lineSize);
 
 bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLine);
 
-void isCorrectWhileLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber);
+void isCorrectWhileLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
 
-void isCorrectForLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber);
+void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
 
 bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize);
 
