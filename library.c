@@ -17,7 +17,7 @@ bool correctCMDLineInput(int argc){
     return false;
 }
 
-bool isComment(char* lineOfCode, const int lineSize, bool* isMultiLineComment){
+bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment){
     // printf("Line is of size %d\n", lineSize);
 
     for(int i=0; i < lineSize; ++i){
@@ -43,8 +43,24 @@ bool isComment(char* lineOfCode, const int lineSize, bool* isMultiLineComment){
     return false;
 }
 
-void isCorrectWhileLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber){
+bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLine){
+    if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
+    //     printf("Error on line %lld: white space found after '('.\n", lineNumber);
+    //     return true;
+    }
+    else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
+    //     printf("Error on line %lld: white space found before ')'.\n", lineNumber);
+    //     return true;
+    }
+
+    return false;
+}
+
+void isCorrectWhileLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber){
     for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
+        // if(checkForParenthesisAndWhiteSpace(lineOfCode, charInLine)){
+        //     continue;
+        // };
         if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
             printf("Error on line %lld: white space found after '('.\n", lineNumber);
         }
@@ -88,36 +104,33 @@ void isCorrectWhileLoopFormat(const char* lineOfCode, int8_t currentLineSize, lo
 
 
 bool isWhileLoop(const char* lineOfCode, const int lineSize){
-    const char* whileLiteral="while";
+    const char* whileStringLiteral="while";
 
     char startOfLineOfCode[6];
 
     for(int i=0; i < lineSize; ++i){
         if(lineOfCode[i] == ' '){
-                continue;
+            continue;
         }
 
-        for(size_t j=0; j<strlen(whileLiteral); ++j){
+        for(size_t j=0; j<strlen(whileStringLiteral); ++j){
             if(lineOfCode[i] == '\n'){
                 puts("returned false\n");
                 return false;
             }
             
-            // printf("%zu ", i+j);
             startOfLineOfCode[j]=lineOfCode[i+j];
         }
 
         startOfLineOfCode[5]='\0';
-        // printf("%d\n", strncmp(whileLiteral, placeHolderName, strlen(whileLiteral)));
-        // printf("%s =? ", placeHolderName);
-        // printf("%s\n", whileLiteral);
-        return !(strncmp(whileLiteral, startOfLineOfCode, strlen(whileLiteral)));
+
+        return !(strncmp(whileStringLiteral, startOfLineOfCode, strlen(whileStringLiteral)));
     }
 
     return false;
 }
 
-void isCorrectForLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber){
+void isCorrectForLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber){
     for(int charInLine=0; charInLine < currentLineSize; ++charInLine){
         if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
             printf("Error on line %lld: white space found after '(' on column %d.\n", lineNumber, charInLine+1);
@@ -135,36 +148,60 @@ void isCorrectForLoopFormat(const char* lineOfCode, int8_t currentLineSize, long
 }
 
 bool isForLoop(const char* lineOfCode, const int lineSize){
-    const char* forLiteral="for";
+    const char* forStringLiteral="for";
 
     char startOfLineOfCode[4];
 
     for(int i=0; i < lineSize; ++i){
         if(lineOfCode[i] == ' '){
-                continue;
+            continue;
         }
 
-        for(size_t j=0; j<strlen(forLiteral); ++j){
+        for(size_t j=0; j<strlen(forStringLiteral); ++j){
             if(lineOfCode[i] == '\n'){
                 puts("returned false\n");
                 return false;
             }
-            
-            // printf("%zu ", i+j);
+
             startOfLineOfCode[j]=lineOfCode[i+j];
         }
 
         startOfLineOfCode[3]='\0';
-        // printf("%d\n", strncmp(whileLiteral, placeHolderName, strlen(whileLiteral)));
-        // printf("%s =? ", placeHolderName);
-        // printf("%s\n", whileLiteral);
-        return !(strncmp(forLiteral, startOfLineOfCode, strlen(forLiteral)));
+        
+        return !(strncmp(forStringLiteral, startOfLineOfCode, strlen(forStringLiteral)));
     }
 
     return false;
 }
 
-bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, int8_t currentLineSize){
+bool isIfStatement(const char* lineOfCode, const int lineSize){
+    const char* ifStringLiteral="if(";
+
+    char firstThreeCharsInLineOfCode[4];
+
+    for(int i=0; i < lineSize; ++i){
+        if(lineOfCode[i] == ' '){
+            continue;
+        }
+
+        for(size_t j=0; j<strlen(ifStringLiteral); ++j){
+            if(lineOfCode[i] == '\n'){
+                puts("returned false\n");
+                return false;
+            }
+
+            firstThreeCharsInLineOfCode[j]=lineOfCode[i+j];
+        }
+
+        firstThreeCharsInLineOfCode[3]='\0';
+        
+        return !(strncmp(ifStringLiteral, firstThreeCharsInLineOfCode, strlen(ifStringLiteral)));
+    }
+
+    return false;
+}
+
+bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize){
     //If increment for \n char is added this needs to change to currentLineSize-1
     if((lineOfCode[currentLineSize-2] == ' ') && (currentLineSize != 1)){
         return true;

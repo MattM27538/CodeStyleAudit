@@ -4,18 +4,23 @@
 #ifndef library_h
 #define library_h
 
+//correct order of functions
 bool correctCMDLineInput(int argc);
 
-bool isComment(char* lineOfCode, int LineSize, bool* isMultiLineComment);
+bool isComment(const char* lineOfCode, const int LineSize, bool* isMultiLineComment);
 
 bool isWhileLoop(const char* lineOfCode, const int lineSize);
 
 bool isForLoop(const char* lineOfCode, const int lineSize);
 
-void isCorrectWhileLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber);
+bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLine);
 
-void isCorrectForLoopFormat(const char* lineOfCode, int8_t currentLineSize, long long lineNumber);
+void isCorrectWhileLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber);
 
-bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, int8_t currentLineSize);
+void isCorrectForLoopFormat(const char* lineOfCode, const int8_t currentLineSize, const long long lineNumber);
+
+bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize);
+
+bool isIfStatement(const char* lineOfCode, const int lineSize);
 
 #endif
