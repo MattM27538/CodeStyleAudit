@@ -1,18 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "lineInformation.h"
 #include "library.h"
 #include <assert.h>
 #include <stdint.h>
-
-//Consider making this a singleton
-struct LineInformation{
-    const int8_t maxLineSize;
-    int8_t currentLineSize;
-    long long lineNumber;
-    bool continueReadingFile;
-    bool isMultiLineComment;
-};
 
 bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
     char lineOfCode[100];
@@ -64,21 +56,29 @@ bool readLine(FILE* codeFile, struct LineInformation* lineInformation){
         return true;
     }
     else if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
-        // printf("line %lld has while\n", lineInformation->lineNumber);
+        printf("line %lld has while\n", lineInformation->lineNumber);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
-        isCorrectWhileLoopFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
+        //Consider changing to if iscorrect else print error on line number.
+        isCorrectWhileLoopFormat(lineOfCode, lineInformation);
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
         return true;
     }
     else if(isForLoop(lineOfCode, lineInformation->currentLineSize)){
-        // printf("line %lld has for\n", lineInformation->lineNumber);
-        isCorrectForLoopFormat(lineOfCode, lineInformation->currentLineSize, lineInformation->lineNumber);
+        printf("line %lld has for\n", lineInformation->lineNumber);
+        //Consider changing to if iscorrect else print error on line number.
+        isCorrectForLoopFormat(lineOfCode, lineInformation);
         //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
         lineInformation->currentLineSize=0;
         ++lineInformation->lineNumber;
         return true;
     }
+    else if(isIfStatement(lineOfCode, lineInformation->currentLineSize)){
+        printf("line %lld has if statement\n", lineInformation->lineNumber);
+    }
+    // else if(isFunctionCall()){
+
+    // }
 
     // fputc('\n', stdout);
     //DRY consider creating function for reset. Or add all lines at end of func and return bool var.
