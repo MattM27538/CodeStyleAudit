@@ -29,4 +29,6 @@ bool isIfStatement(const char* lineOfCode, const int lineSize);
 
 bool isElseStatement(const char* lineOfCode, const int lineSize);
 
+char getFirstCharInLine(const char* lineOfCode, const int lineSize);
+
 #endif

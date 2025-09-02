@@ -19,9 +19,15 @@ bool correctCMDLineInput(int argc){
     return false;
 }
 
-// char getFirstCharInLine(const char* lineOfCode, const int lineSize){
-
-// }
+char getFirstCharInLine(const char* lineOfCode, const int lineSize){
+    for(int charIndex=0; charIndex < lineSize; ++charIndex){
+        if(lineOfCode[charIndex] != ' '){
+            return lineOfCode[charIndex];
+        }
+    }
+    //This will probably break something.
+    return '\n';
+}
 
 bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment){
     // printf("Line is of size %d\n", lineSize);
