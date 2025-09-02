@@ -6,9 +6,11 @@
 #define library_h
 
 //correct order of functions
+char getFirstCharInLine(const char* lineOfCode, const int lineSize);
+
 bool correctCMDLineInput(int argc);
 
-bool isComment(const char* lineOfCode, const int LineSize, bool* isMultiLineComment);
+bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment);
 
 bool isWhileLoop(const char* lineOfCode, const int lineSize);
 
@@ -20,8 +22,11 @@ void isCorrectWhileLoopFormat(const char* lineOfCode, const struct LineInformati
 
 void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
 
+//change currentLineSize to lineSize?
 bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize);
 
 bool isIfStatement(const char* lineOfCode, const int lineSize);
+
+bool isElseStatement(const char* lineOfCode, const int lineSize);
 
 #endif

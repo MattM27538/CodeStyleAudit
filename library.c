@@ -2,9 +2,11 @@
 #include "library.h"
 #include <string.h>
 #include <stdint.h>
-
-//DELETE ME when done testing.
 #include <stdio.h>
+
+//TODO:
+//CHECK FIRST CHAR OF LINE THEN CALL APPROPRIATE FUNCTION
+//CHECK FOR MULTILINE COMPARISONS
 
 bool correctCMDLineInput(int argc){
     if(argc == 2){
@@ -16,6 +18,10 @@ bool correctCMDLineInput(int argc){
 
     return false;
 }
+
+// char getFirstCharInLine(const char* lineOfCode, const int lineSize){
+
+// }
 
 bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment){
     // printf("Line is of size %d\n", lineSize);
@@ -198,6 +204,33 @@ bool isIfStatement(const char* lineOfCode, const int lineSize){
         firstThreeCharsInLineOfCode[3]='\0';
         
         return !(strncmp(ifStringLiteral, firstThreeCharsInLineOfCode, strlen(ifStringLiteral)));
+    }
+
+    return false;
+}
+
+bool isElseStatement(const char* lineOfCode, const int lineSize){
+    const char* elseStringLiteral="else";
+
+    char firstFourCharsInLineOfCode[5];
+
+    for(int i=0; i < lineSize; ++i){
+        if(lineOfCode[i] == ' '){
+            continue;
+        }
+
+        for(size_t j=0; j<strlen(elseStringLiteral); ++j){
+            if(lineOfCode[i] == '\n'){
+                puts("returned false\n");
+                return false;
+            }
+
+            firstFourCharsInLineOfCode[j]=lineOfCode[i+j];
+        }
+
+        firstFourCharsInLineOfCode[4]='\0';
+        
+        return !(strncmp(elseStringLiteral, firstFourCharsInLineOfCode, strlen(elseStringLiteral)));
     }
 
     return false;
