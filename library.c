@@ -67,13 +67,13 @@ void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInform
         case 'e':
         {
             if(isElseStatement(lineOfCode, lineInformation->currentLineSize)){
-                if(isElseIfStatement(lineOfCode, lineInformation->currentLineSize)){
+                // if(isElseIfStatement(lineOfCode, lineInformation->currentLineSize)){
                     
-                }
-                else{
+                // }
+                // else{
                     printf("line %lld has else statement\n", lineInformation->lineNumber);
                     isCorrectElseStatementFormat(lineOfCode, lineInformation);
-                }
+                // }
             }
         }
         break;
@@ -270,11 +270,19 @@ bool isIfStatement(const char* lineOfCode, const int lineSize){
     return false;
 }
 
-// void isCorrectElseStatementFormat(lineOfCode, lineInformation){
-//     for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
+void isCorrectElseStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
+    for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
+        if(lineOfCode[charInLine] == '{'){
+            if(lineOfCode[charInLine-1] != 'e'){
+                printf("Syntax Error: '{' not found directly after end of else"
+                       " statement on line %lld.\n", lineInformation->lineNumber);
+            }
+            return;
+        }
+    }
 
-//     }
-// }
+    puts("Syntax Error: \"{\" not found on same line as else statement.\n");
+}
 
 bool isElseStatement(const char* lineOfCode, const int lineSize){
     const char* elseStringLiteral="else";
