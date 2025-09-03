@@ -15,6 +15,7 @@ bool correctCMDLineInput(int argc){
 
     //print error/help info
     //printHelp();
+    fprintf(stderr, "Incorrect number of command line arguments found. Expected 2, found %d.\nExiting.", argc);
 
     return false;
 }
@@ -67,13 +68,13 @@ void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInform
         case 'e':
         {
             if(isElseStatement(lineOfCode, lineInformation->currentLineSize)){
-                // if(isElseIfStatement(lineOfCode, lineInformation->currentLineSize)){
-                    
-                // }
-                // else{
+                if(isElseIfStatement(lineOfCode, lineInformation->currentLineSize)){
+                    printf("line %lld has else if statement\n", lineInformation->lineNumber);
+                }
+                else{
                     printf("line %lld has else statement\n", lineInformation->lineNumber);
                     isCorrectElseStatementFormat(lineOfCode, lineInformation);
-                // }
+                }
             }
         }
         break;
@@ -306,6 +307,33 @@ bool isElseStatement(const char* lineOfCode, const int lineSize){
         firstFourCharsInLineOfCode[4]='\0';
         
         return !(strncmp(elseStringLiteral, firstFourCharsInLineOfCode, strlen(elseStringLiteral)));
+    }
+
+    return false;
+}
+
+bool isElseIfStatement(const char* lineOfCode, const int lineSize){
+    const char* elseIfStringLiteral="else if";
+
+    char firstSevenCharsInLineOfCode[8];
+
+    for(int i=0; i < lineSize; ++i){
+        if(lineOfCode[i] == ' '){
+            continue;
+        }
+
+        for(size_t j=0; j<strlen(elseIfStringLiteral); ++j){
+            if(lineOfCode[i] == '\n'){
+                puts("returned false\n");
+                return false;
+            }
+
+            firstSevenCharsInLineOfCode[j]=lineOfCode[i+j];
+        }
+
+        firstSevenCharsInLineOfCode[7]='\0';
+        
+        return !(strncmp(elseIfStringLiteral, firstSevenCharsInLineOfCode, strlen(elseIfStringLiteral)));
     }
 
     return false;

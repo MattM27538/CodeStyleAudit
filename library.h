@@ -35,4 +35,6 @@ char getFirstCharInLine(const char* lineOfCode, const int lineSize);
 
 void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInformation* lineInformation);
 
+bool isElseIfStatement(const char* lineOfCode, const int lineSize);
+
 #endif
