@@ -29,6 +29,10 @@ bool isIfStatement(const char* lineOfCode, const int lineSize);
 
 bool isElseStatement(const char* lineOfCode, const int lineSize);
 
+// void isCorrectElseStatementFormat(lineOfCode, lineInformation);
+
 char getFirstCharInLine(const char* lineOfCode, const int lineSize);
+
+void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInformation* lineInformation);
 
 #endif

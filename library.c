@@ -29,6 +29,61 @@ char getFirstCharInLine(const char* lineOfCode, const int lineSize){
     return '\n';
 }
 
+//lineOfCode and firstCharInLine add to struct?
+void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInformation* lineInformation){
+    switch(lineInformation->firstCharInLine){
+        case '/':
+        {   
+            //Pass ineInformation instead of last two parameters.
+            if(isComment(lineOfCode, lineInformation->currentLineSize, &lineInformation->isMultiLineComment)
+            || lineInformation->isMultiLineComment){
+
+            }
+        }
+        break;
+        case 'w':
+        {
+            if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
+                printf("line %lld has while\n", lineInformation->lineNumber);
+                isCorrectWhileLoopFormat(lineOfCode, lineInformation);
+            }
+        }
+        break;
+        case 'f':
+        {
+            if(isForLoop(lineOfCode, lineInformation->currentLineSize)){
+                printf("line %lld has for\n", lineInformation->lineNumber);
+                isCorrectForLoopFormat(lineOfCode, lineInformation);
+            }
+        }
+        break;
+        case 'i':
+        {
+            if(isIfStatement(lineOfCode, lineInformation->currentLineSize)){
+                printf("line %lld has if statement\n", lineInformation->lineNumber);
+            }
+        }
+        break;
+        case 'e':
+        {
+            if(isElseStatement(lineOfCode, lineInformation->currentLineSize)){
+                if(isElseIfStatement(lineOfCode, lineInformation->currentLineSize)){
+                    
+                }
+                else{
+                    printf("line %lld has else statement\n", lineInformation->lineNumber);
+                    isCorrectElseStatementFormat(lineOfCode, lineInformation);
+                }
+            }
+        }
+        break;
+        // default:{
+        //     puts("Did default");
+        // }
+        //call is function call
+    }
+}
+
 bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment){
     // printf("Line is of size %d\n", lineSize);
 
@@ -214,6 +269,12 @@ bool isIfStatement(const char* lineOfCode, const int lineSize){
 
     return false;
 }
+
+// void isCorrectElseStatementFormat(lineOfCode, lineInformation){
+//     for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
+
+//     }
+// }
 
 bool isElseStatement(const char* lineOfCode, const int lineSize){
     const char* elseStringLiteral="else";
