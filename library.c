@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 //TODO:
 //CHECK FIRST CHAR OF LINE THEN CALL APPROPRIATE FUNCTION
@@ -13,11 +14,20 @@ bool correctCMDLineInput(int argc){
         return true;
     }
 
-    //print error/help info
-    //printHelp();
     fprintf(stderr, "Incorrect number of command line arguments found. Expected 2, found %d.\nExiting.", argc);
 
     return false;
+}
+
+FILE* openCodeFile(struct CodeFile* codeFile){
+    FILE* codeFilePointer=fopen(codeFile->codeFileName, codeFile->readOnly);
+    
+    if(codeFilePointer == NULL){
+        perror("Error opening code file. Please try again.");
+        exit(1);
+    }
+
+    return codeFilePointer;
 }
 
 char getFirstCharInLine(const char* lineOfCode, const int lineSize){

@@ -1,14 +1,17 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "lineInformation.h"
+#include "codeFile.h"
 
 #ifndef library_h
 #define library_h
 
 //correct order of functions
-char getFirstCharInLine(const char* lineOfCode, const int lineSize);
-
 bool correctCMDLineInput(int argc);
+
+FILE* openCodeFile(struct CodeFile* codeFile);
+
+char getFirstCharInLine(const char* lineOfCode, const int lineSize);
 
 bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment);
 
