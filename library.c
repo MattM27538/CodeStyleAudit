@@ -56,7 +56,7 @@ void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInform
         {
             if(isWhileLoop(lineOfCode, lineInformation->currentLineSize)){
                 printf("line %lld has while\n", lineInformation->lineNumber);
-                isCorrectWhileLoopFormat(lineOfCode, lineInformation);
+                auditConditionalStatementFormat(lineOfCode, lineInformation);
             }
         }
         break;
@@ -72,6 +72,7 @@ void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInform
         {
             if(isIfStatement(lineOfCode, lineInformation->currentLineSize)){
                 printf("line %lld has if statement\n", lineInformation->lineNumber);
+                auditConditionalStatementFormat(lineOfCode, lineInformation);
             }
         }
         break;
@@ -80,6 +81,7 @@ void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInform
             if(isElseStatement(lineOfCode, lineInformation->currentLineSize)){
                 if(isElseIfStatement(lineOfCode, lineInformation->currentLineSize)){
                     printf("line %lld has else if statement\n", lineInformation->lineNumber);
+                    auditConditionalStatementFormat(lineOfCode, lineInformation);
                 }
                 else{
                     printf("line %lld has else statement\n", lineInformation->lineNumber);
@@ -134,7 +136,7 @@ bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLi
     return false;
 }
 
-void isCorrectWhileLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
+void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
     for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
         // if(checkForParenthesisAndWhiteSpace(lineOfCode, charInLine)){
         //     continue;
@@ -322,29 +324,57 @@ bool isElseStatement(const char* lineOfCode, const int lineSize){
     return false;
 }
 
+int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize){
+    for(int charIndex=0; charIndex < lineSize; ++charIndex){
+        if(lineOfCode[charIndex] == ' '){
+            continue;
+        }
+
+        return charIndex;
+    }
+
+    return 0;
+}
+
+//rename and shrink parameters
+void grabCharsFromString(const char* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int firstNonEmptyindex){
+    for(int charIndex=firstNonEmptyindex; charIndex < charsInLineOfCodeSize; ++charIndex){
+        charsInLineOfCode[charIndex]=lineOfCode[firstNonEmptyindex+charIndex];
+    }
+
+    charsInLineOfCode[charsInLineOfCodeSize]='\0';
+}
+
 bool isElseIfStatement(const char* lineOfCode, const int lineSize){
     const char* elseIfStringLiteral="else if";
 
     char firstSevenCharsInLineOfCode[8];
 
-    for(int i=0; i < lineSize; ++i){
-        if(lineOfCode[i] == ' '){
-            continue;
-        }
+    //rename var
+    int firstNonSpaceindex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
 
-        for(size_t j=0; j<strlen(elseIfStringLiteral); ++j){
-            if(lineOfCode[i] == '\n'){
-                puts("returned false\n");
-                return false;
-            }
+    //change 4th parameter name to sizeof()
+    grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceindex);
 
-            firstSevenCharsInLineOfCode[j]=lineOfCode[i+j];
-        }
+    // for(int i=0; i < lineSize; ++i){
+    //     if(lineOfCode[i] == ' '){
+    //         continue;
+    //     }
 
-        firstSevenCharsInLineOfCode[7]='\0';
+        // for(size_t j=0; j<strlen(elseIfStringLiteral); ++j){
+        //     if(lineOfCode[i] == '\n'){
+        //         puts("returned false\n");
+        //         return false;
+        //     }
+
+        //     firstSevenCharsInLineOfCode[j]=lineOfCode[i+j];
+        // }
+
+        //move to grabCharsFromString
+        // firstSevenCharsInLineOfCode[7]='\0';
         
         return !(strncmp(elseIfStringLiteral, firstSevenCharsInLineOfCode, strlen(elseIfStringLiteral)));
-    }
+    // }
 
     return false;
 }
