@@ -186,26 +186,30 @@ void auditConditionalStatementFormat(const char* lineOfCode, const struct LineIn
 bool isWhileLoop(const char* lineOfCode, const int lineSize){
     const char* whileStringLiteral="while(";
 
-    char startOfLineOfCode[7];
+    char firstSixCharsInLineOfCode[7];
 
-    for(int i=0; i < lineSize; ++i){
-        if(lineOfCode[i] == ' '){
-            continue;
-        }
+    int firstNonSpaceIndex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
+    
+    grabCharsFromString(lineOfCode, firstSixCharsInLineOfCode, sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-        for(size_t j=0; j<strlen(whileStringLiteral); ++j){
-            if(lineOfCode[i] == '\n'){
-                puts("returned false\n");
-                return false;
-            }
+    // for(int i=0; i < lineSize; ++i){
+    //     if(lineOfCode[i] == ' '){
+    //         continue;
+    //     }
+
+    //     for(size_t j=0; j<strlen(whileStringLiteral); ++j){
+    //         if(lineOfCode[i] == '\n'){
+    //             puts("returned false\n");
+    //             return false;
+    //         }
             
-            startOfLineOfCode[j]=lineOfCode[i+j];
-        }
+    //         startOfLineOfCode[j]=lineOfCode[i+j];
+    //     }
 
-        startOfLineOfCode[6]='\0';
+    //     startOfLineOfCode[6]='\0';
 
-        return !(strncmp(whileStringLiteral, startOfLineOfCode, strlen(whileStringLiteral)));
-    }
+        return !(strncmp(whileStringLiteral, firstSixCharsInLineOfCode, strlen(whileStringLiteral)));
+    // }
 
     return false;
 }
@@ -232,26 +236,30 @@ void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation
 bool isForLoop(const char* lineOfCode, const int lineSize){
     const char* forStringLiteral="for(";
 
-    char startOfLineOfCode[5];
+    char firstFourCharsInLineOfCode[5];
 
-    for(int i=0; i < lineSize; ++i){
-        if(lineOfCode[i] == ' '){
-            continue;
-        }
+    int firstNonSpaceIndex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
+    
+    grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-        for(size_t j=0; j<strlen(forStringLiteral); ++j){
-            if(lineOfCode[i] == '\n'){
-                puts("returned false\n");
-                return false;
-            }
+    // for(int i=0; i < lineSize; ++i){
+    //     if(lineOfCode[i] == ' '){
+    //         continue;
+    //     }
 
-            startOfLineOfCode[j]=lineOfCode[i+j];
-        }
+    //     for(size_t j=0; j<strlen(forStringLiteral); ++j){
+    //         if(lineOfCode[i] == '\n'){
+    //             puts("returned false\n");
+    //             return false;
+    //         }
 
-        startOfLineOfCode[4]='\0';
+    //         startOfLineOfCode[j]=lineOfCode[i+j];
+    //     }
+
+    //     startOfLineOfCode[4]='\0';
         
-        return !(strncmp(forStringLiteral, startOfLineOfCode, strlen(forStringLiteral)));
-    }
+        return !(strncmp(forStringLiteral, firstFourCharsInLineOfCode, strlen(forStringLiteral)));
+    // }
 
     return false;
 }
@@ -261,24 +269,29 @@ bool isIfStatement(const char* lineOfCode, const int lineSize){
 
     char firstThreeCharsInLineOfCode[4];
 
-    for(int i=0; i < lineSize; ++i){
-        if(lineOfCode[i] == ' '){
-            continue;
-        }
+    int firstNonSpaceIndex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
+    
+    grabCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-        for(size_t j=0; j<strlen(ifStringLiteral); ++j){
-            if(lineOfCode[i] == '\n'){
-                puts("returned false\n");
-                return false;
-            }
 
-            firstThreeCharsInLineOfCode[j]=lineOfCode[i+j];
-        }
+    // for(int i=0; i < lineSize; ++i){
+    //     if(lineOfCode[i] == ' '){
+    //         continue;
+    //     }
 
-        firstThreeCharsInLineOfCode[3]='\0';
+    //     for(size_t j=0; j<strlen(ifStringLiteral); ++j){
+    //         if(lineOfCode[i] == '\n'){
+    //             puts("returned false\n");
+    //             return false;
+    //         }
+
+    //         firstThreeCharsInLineOfCode[j]=lineOfCode[i+j];
+    //     }
+
+    //     firstThreeCharsInLineOfCode[3]='\0';
         
         return !(strncmp(ifStringLiteral, firstThreeCharsInLineOfCode, strlen(ifStringLiteral)));
-    }
+    // }
 
     return false;
 }
@@ -302,35 +315,37 @@ bool isElseStatement(const char* lineOfCode, const int lineSize){
 
     char firstFourCharsInLineOfCode[5];
 
-    for(int i=0; i < lineSize; ++i){
-        if(lineOfCode[i] == ' '){
-            continue;
-        }
+    int firstNonSpaceIndex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
+    
+    grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-        for(size_t j=0; j<strlen(elseStringLiteral); ++j){
-            if(lineOfCode[i] == '\n'){
-                puts("returned false\n");
-                return false;
-            }
+    // for(int i=0; i < lineSize; ++i){
+    //     if(lineOfCode[i] == ' '){
+    //         continue;
+    //     }
 
-            firstFourCharsInLineOfCode[j]=lineOfCode[i+j];
-        }
+    //     for(size_t j=0; j<strlen(elseStringLiteral); ++j){
+    //         if(lineOfCode[i] == '\n'){
+    //             puts("returned false\n");
+    //             return false;
+    //         }
 
-        firstFourCharsInLineOfCode[4]='\0';
+    //         firstFourCharsInLineOfCode[j]=lineOfCode[i+j];
+    //     }
+
+    //     firstFourCharsInLineOfCode[4]='\0';
         
         return !(strncmp(elseStringLiteral, firstFourCharsInLineOfCode, strlen(elseStringLiteral)));
-    }
+    // }
 
     return false;
 }
 
 int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize){
     for(int charIndex=0; charIndex < lineSize; ++charIndex){
-        if(lineOfCode[charIndex] == ' '){
-            continue;
+        if(lineOfCode[charIndex] != ' '){
+            return charIndex;
         }
-
-        return charIndex;
     }
 
     return 0;
@@ -338,7 +353,7 @@ int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize){
 
 //rename and shrink parameters
 void grabCharsFromString(const char* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int firstNonEmptyindex){
-    for(int charIndex=firstNonEmptyindex; charIndex < charsInLineOfCodeSize; ++charIndex){
+    for(int charIndex=0; charIndex < charsInLineOfCodeSize; ++charIndex){
         charsInLineOfCode[charIndex]=lineOfCode[firstNonEmptyindex+charIndex];
     }
 
@@ -351,10 +366,10 @@ bool isElseIfStatement(const char* lineOfCode, const int lineSize){
     char firstSevenCharsInLineOfCode[8];
 
     //rename var
-    int firstNonSpaceindex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
+    int firstNonSpaceIndex=findFirstNonSpaceCharInLine(lineOfCode, lineSize);
 
     //change 4th parameter name to sizeof()
-    grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceindex);
+    grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
 
     // for(int i=0; i < lineSize; ++i){
     //     if(lineOfCode[i] == ' '){
