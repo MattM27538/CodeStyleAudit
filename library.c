@@ -192,7 +192,7 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstSixCharsInLineOfCode, sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    return foundKeyword(whileStringLiteral, firstSixCharsInLineOfCode);
+    return isKeywordStatement(whileStringLiteral, firstSixCharsInLineOfCode);
 }
 
 void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
@@ -223,7 +223,7 @@ bool isForLoop(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    return foundKeyword(forStringLiteral, firstFourCharsInLineOfCode);
+    return isKeywordStatement(forStringLiteral, firstFourCharsInLineOfCode);
 }
 
 bool isIfStatement(const char* lineOfCode, const int lineSize){
@@ -235,7 +235,7 @@ bool isIfStatement(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    return foundKeyword(ifStringLiteral, firstThreeCharsInLineOfCode);
+    return isKeywordStatement(ifStringLiteral, firstThreeCharsInLineOfCode);
 }
 
 void isCorrectElseStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
@@ -261,7 +261,7 @@ bool isElseStatement(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    return foundKeyword(elseStringLiteral, firstFourCharsInLineOfCode);
+    return isKeywordStatement(elseStringLiteral, firstFourCharsInLineOfCode);
 }
 
 int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize){
@@ -294,10 +294,10 @@ bool isElseIfStatement(const char* lineOfCode, const int lineSize){
     //change 4th parameter name to sizeof()
     grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
         
-    return foundKeyword(elseIfStringLiteral, firstSevenCharsInLineOfCode);
+    return isKeywordStatement(elseIfStringLiteral, firstSevenCharsInLineOfCode);
 }
 
-bool foundKeyword(const char* keywordLiteral, const char* beginningOfLineOfCode){
+bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode){
     return !(strncmp(keywordLiteral, beginningOfLineOfCode, strlen(keywordLiteral)));
 }
 

@@ -44,6 +44,6 @@ int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize);
 
 void grabCharsFromString(const char* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
 
-bool foundKeyword(const char* keywordLiteral, const char* beginningOfLineOfCode);
+bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode);
 
 #endif
