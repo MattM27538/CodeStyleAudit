@@ -21,7 +21,7 @@ bool isForLoop(const char* lineOfCode, const int lineSize);
 
 bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLine);
 
-void isCorrectWhileLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
+void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
 
 void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
 
@@ -39,5 +39,11 @@ char getFirstCharInLine(const char* lineOfCode, const int lineSize);
 void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInformation* lineInformation);
 
 bool isElseIfStatement(const char* lineOfCode, const int lineSize);
+
+int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize);
+
+void grabCharsFromString(const char* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
+
+bool foundKeyword(const char* keywordLiteral, const char* beginningOfLineOfCode);
 
 #endif

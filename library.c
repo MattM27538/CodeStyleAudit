@@ -192,26 +192,7 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstSixCharsInLineOfCode, sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    // for(int i=0; i < lineSize; ++i){
-    //     if(lineOfCode[i] == ' '){
-    //         continue;
-    //     }
-
-    //     for(size_t j=0; j<strlen(whileStringLiteral); ++j){
-    //         if(lineOfCode[i] == '\n'){
-    //             puts("returned false\n");
-    //             return false;
-    //         }
-            
-    //         startOfLineOfCode[j]=lineOfCode[i+j];
-    //     }
-
-    //     startOfLineOfCode[6]='\0';
-
-        return !(strncmp(whileStringLiteral, firstSixCharsInLineOfCode, strlen(whileStringLiteral)));
-    // }
-
-    return false;
+    return foundKeyword(whileStringLiteral, firstSixCharsInLineOfCode);
 }
 
 void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
@@ -242,26 +223,7 @@ bool isForLoop(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    // for(int i=0; i < lineSize; ++i){
-    //     if(lineOfCode[i] == ' '){
-    //         continue;
-    //     }
-
-    //     for(size_t j=0; j<strlen(forStringLiteral); ++j){
-    //         if(lineOfCode[i] == '\n'){
-    //             puts("returned false\n");
-    //             return false;
-    //         }
-
-    //         startOfLineOfCode[j]=lineOfCode[i+j];
-    //     }
-
-    //     startOfLineOfCode[4]='\0';
-        
-        return !(strncmp(forStringLiteral, firstFourCharsInLineOfCode, strlen(forStringLiteral)));
-    // }
-
-    return false;
+    return foundKeyword(forStringLiteral, firstFourCharsInLineOfCode);
 }
 
 bool isIfStatement(const char* lineOfCode, const int lineSize){
@@ -273,27 +235,7 @@ bool isIfStatement(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-
-    // for(int i=0; i < lineSize; ++i){
-    //     if(lineOfCode[i] == ' '){
-    //         continue;
-    //     }
-
-    //     for(size_t j=0; j<strlen(ifStringLiteral); ++j){
-    //         if(lineOfCode[i] == '\n'){
-    //             puts("returned false\n");
-    //             return false;
-    //         }
-
-    //         firstThreeCharsInLineOfCode[j]=lineOfCode[i+j];
-    //     }
-
-    //     firstThreeCharsInLineOfCode[3]='\0';
-        
-        return !(strncmp(ifStringLiteral, firstThreeCharsInLineOfCode, strlen(ifStringLiteral)));
-    // }
-
-    return false;
+    return foundKeyword(ifStringLiteral, firstThreeCharsInLineOfCode);
 }
 
 void isCorrectElseStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
@@ -319,26 +261,7 @@ bool isElseStatement(const char* lineOfCode, const int lineSize){
     
     grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
 
-    // for(int i=0; i < lineSize; ++i){
-    //     if(lineOfCode[i] == ' '){
-    //         continue;
-    //     }
-
-    //     for(size_t j=0; j<strlen(elseStringLiteral); ++j){
-    //         if(lineOfCode[i] == '\n'){
-    //             puts("returned false\n");
-    //             return false;
-    //         }
-
-    //         firstFourCharsInLineOfCode[j]=lineOfCode[i+j];
-    //     }
-
-    //     firstFourCharsInLineOfCode[4]='\0';
-        
-        return !(strncmp(elseStringLiteral, firstFourCharsInLineOfCode, strlen(elseStringLiteral)));
-    // }
-
-    return false;
+    return foundKeyword(elseStringLiteral, firstFourCharsInLineOfCode);
 }
 
 int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize){
@@ -370,28 +293,12 @@ bool isElseIfStatement(const char* lineOfCode, const int lineSize){
 
     //change 4th parameter name to sizeof()
     grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
-
-    // for(int i=0; i < lineSize; ++i){
-    //     if(lineOfCode[i] == ' '){
-    //         continue;
-    //     }
-
-        // for(size_t j=0; j<strlen(elseIfStringLiteral); ++j){
-        //     if(lineOfCode[i] == '\n'){
-        //         puts("returned false\n");
-        //         return false;
-        //     }
-
-        //     firstSevenCharsInLineOfCode[j]=lineOfCode[i+j];
-        // }
-
-        //move to grabCharsFromString
-        // firstSevenCharsInLineOfCode[7]='\0';
         
-        return !(strncmp(elseIfStringLiteral, firstSevenCharsInLineOfCode, strlen(elseIfStringLiteral)));
-    // }
+    return foundKeyword(elseIfStringLiteral, firstSevenCharsInLineOfCode);
+}
 
-    return false;
+bool foundKeyword(const char* keywordLiteral, const char* beginningOfLineOfCode){
+    return !(strncmp(keywordLiteral, beginningOfLineOfCode, strlen(keywordLiteral)));
 }
 
 bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize){
