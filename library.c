@@ -40,6 +40,10 @@ char getFirstCharInLine(const char* lineOfCode, const int lineSize){
     return '\n';
 }
 
+bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode){
+    return !(strncmp(keywordLiteral, beginningOfLineOfCode, strlen(keywordLiteral)));
+}
+
 //lineOfCode and firstCharInLine add to struct?
 void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInformation* lineInformation){
     switch(lineInformation->firstCharInLine){
@@ -123,61 +127,75 @@ bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComm
     return false;
 }
 
-bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLine){
-    if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
-    //     printf("Error on line %lld: white space found after '('.\n", lineNumber);
-    //     return true;
+//TODO Consider combining arguments into struct
+//      & split into two functions.
+bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charIndex, const long long lineNumber){
+    if(lineOfCode[charIndex] == '(' && lineOfCode[charIndex+1] == ' '){
+        printf("Error on line %lld: white space found after '('.\n", lineNumber);
+        return true;
     }
-    else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
-    //     printf("Error on line %lld: white space found before ')'.\n", lineNumber);
-    //     return true;
+    else if(lineOfCode[charIndex] == ')' && lineOfCode[charIndex-1] == ' '){
+        printf("Error on line %lld: white space found before ')'.\n", lineNumber);
+        return true;
     }
 
     return false;
 }
 
-void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
-    for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
-        // if(checkForParenthesisAndWhiteSpace(lineOfCode, charInLine)){
-        //     continue;
-        // };
-        if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
-            printf("Error on line %lld: white space found after '('.\n", lineInformation->lineNumber);
-        }
-        else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
-            printf("Error on line %lld: white space found before ')'.\n", lineInformation->lineNumber);
-        }
-        else{
-            switch(lineOfCode[charInLine]){
+bool isComparisonOperator(const char charInLineOfCode){
+    switch(charInLineOfCode){
+        case '<':
+        case '>':
+        case '!':
+        case '=':
+            {
+                return true;
+            }
+    }
+
+    return false;
+}
+
+void auditComparisonOperatorFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation){
+     switch(lineOfCode[charIndex]){
                 case '<':
                 case '>':
                 case '!':
-                    {
-                        if(lineOfCode[charInLine-1] != ' '){
+                    {   
+                        if(lineOfCode[charIndex-1] != ' '){
                             printf("Error on line %lld: white space not found before comparison operator.\n", lineInformation->lineNumber);
                         }
 
-                        if((lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' ')
-                           || (lineOfCode[charInLine+1] != ' ')){
+                        if((lineOfCode[charIndex+1] == '=' && lineOfCode[charIndex+2] != ' ')
+                           || (lineOfCode[charIndex+1] != ' ')){
                             printf("Error on line %lld: white space not found after comparison operator.\n", lineInformation->lineNumber);
                         }
                     }
                 break;
                 case '=':
                     {
-                         if(lineOfCode[charInLine+1] == '=' && lineOfCode[charInLine+2] != ' '){
+                         if(lineOfCode[charIndex+1] == '=' && lineOfCode[charIndex+2] != ' '){
                             printf("Error on line %lld: white space not found after '=='.\n", lineInformation->lineNumber);
                         }
-                        else if(lineOfCode[charInLine-1] == '=' && lineOfCode[charInLine-2] != ' '){
+                        else if(lineOfCode[charIndex-1] == '=' && lineOfCode[charIndex-2] != ' '){
                             printf("Error on line %lld: white space not found before '=='.\n", lineInformation->lineNumber);
                         }
-                        //Check for accidental assignment operator
+                        //TODO Check for accidental assignment operator
                         // else if (){
                         //     printf("Error on line %lld: assignment operator found.\n", lineNumber);
                         // }
                     }
 
-            }
+    }
+}
+
+void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
+    for(int charIndex=0; charIndex < lineInformation->currentLineSize; ++charIndex){
+        if(checkForParenthesisAndWhiteSpace(lineOfCode, charIndex, lineInformation->lineNumber)){
+            continue;
+        }
+        else if(isComparisonOperator(lineOfCode[charIndex])){
+            auditComparisonOperatorFormatting(lineOfCode, charIndex, lineInformation);
         }
     }
 }
@@ -295,10 +313,6 @@ bool isElseIfStatement(const char* lineOfCode, const int lineSize){
     grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
         
     return isKeywordStatement(elseIfStringLiteral, firstSevenCharsInLineOfCode);
-}
-
-bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode){
-    return !(strncmp(keywordLiteral, beginningOfLineOfCode, strlen(keywordLiteral)));
 }
 
 bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize){

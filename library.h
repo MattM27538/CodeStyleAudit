@@ -19,7 +19,7 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize);
 
 bool isForLoop(const char* lineOfCode, const int lineSize);
 
-bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInLine);
+bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charIndex, const long long lineNumber);
 
 void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
 
@@ -45,5 +45,9 @@ int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize);
 void grabCharsFromString(const char* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
 
 bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode);
+
+bool isComparisonOperator(const char charInLineOfCode);
+
+void auditComparisonOperatorFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation);
 
 #endif
