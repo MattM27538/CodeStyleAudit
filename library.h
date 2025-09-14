@@ -13,11 +13,11 @@ FILE* openCodeFile(struct CodeFile* codeFile);
 
 bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
-bool isComment(struct LineOfCode* lineOfCode, const int lineSize);
+bool isComment(struct LineOfCode* lineOfCode);
 
-bool isWhileLoop(const struct LineOfCode* lineOfCode, const int lineSize);
+bool isWhileLoop(const struct LineOfCode* lineOfCode);
 
-bool isForLoop(const struct LineOfCode* lineOfCode, const int lineSize);
+bool isForLoop(const struct LineOfCode* lineOfCode);
 
 // bool checkForParenthesisAndWhiteSpace(const struct LineOfCode* lineOfCode, const int charIndex, const long long lineNumber);
 
@@ -26,21 +26,21 @@ void auditConditionalStatementFormat(const struct LineOfCode* lineOfCode);
 void isCorrectForLoopFormat(const struct LineOfCode* lineOfCode);
 
 //change currentLineSize to lineSize?
-bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode, const int8_t currentLineSize);
+bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode);
 
-bool isIfStatement(const struct LineOfCode* lineOfCode, const int lineSize);
+bool isIfStatement(const struct LineOfCode* lineOfCode);
 
-bool isElseStatement(const struct LineOfCode* lineOfCode, const int lineSize);
+bool isElseStatement(const struct LineOfCode* lineOfCode);
 
 void isCorrectElseStatementFormat(const struct LineOfCode* lineOfCode);
 
-char getFirstCharInLine(const struct LineOfCode* lineOfCode, const int lineSize);
+char getFirstCharInLine(const struct LineOfCode* lineOfCode);
 
 void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode);
 
-bool isElseIfStatement(const struct LineOfCode* lineOfCode, const int lineSize);
+bool isElseIfStatement(const struct LineOfCode* lineOfCode);
 
-int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode, const int lineSize);
+int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode);
 
 void grabCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
 
