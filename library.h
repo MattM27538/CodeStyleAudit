@@ -50,4 +50,8 @@ bool isComparisonOperator(const char charInLineOfCode);
 
 void auditComparisonOperatorFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation);
 
+bool isParenthesis(const char charInLineOfCode);
+
+void auditParenthesisFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation);
+
 #endif

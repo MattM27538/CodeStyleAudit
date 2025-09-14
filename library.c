@@ -142,6 +142,25 @@ bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charInde
     return false;
 }
 
+bool isParenthesis(const char charInLineOfCode){
+    if((charInLineOfCode == ')') || (charInLineOfCode == '(')){
+        return true;
+    }
+
+    return false;
+}
+
+void auditParenthesisFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation){
+    if((lineOfCode[charIndex+1] == ' ') || (lineOfCode[charIndex-1] == ' ')){
+        printf("Error on line %lld: white space found after '('.\n", lineInformation->lineNumber);
+        // return true;
+    }
+    // else if(lineOfCode[charIndex-1] == ' '){
+    //     printf("Error on line %lld: white space found before ')'.\n", lineInformation->lineNumber);
+    //     return true;
+    // }
+}
+
 bool isComparisonOperator(const char charInLineOfCode){
     switch(charInLineOfCode){
         case '<':
@@ -191,11 +210,12 @@ void auditComparisonOperatorFormat(const char* lineOfCode, const int charIndex, 
 
 void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
     for(int charIndex=0; charIndex < lineInformation->currentLineSize; ++charIndex){
-        if(checkForParenthesisAndWhiteSpace(lineOfCode, charIndex, lineInformation->lineNumber)){
-            continue;
+        // if(checkForParenthesisAndWhiteSpace(lineOfCode, charIndex, lineInformation->lineNumber)){
+        if(isParenthesis(lineOfCode[charIndex])){
+            auditParenthesisFormat(lineOfCode, charIndex, lineInformation);
         }
         else if(isComparisonOperator(lineOfCode[charIndex])){
-            auditComparisonOperatorFormatting(lineOfCode, charIndex, lineInformation);
+            auditComparisonOperatorFormat(lineOfCode, charIndex, lineInformation);
         }
     }
 }
