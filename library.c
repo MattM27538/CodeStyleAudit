@@ -8,6 +8,10 @@
 //TODO:
 //CHECK FIRST CHAR OF LINE THEN CALL APPROPRIATE FUNCTION
 //CHECK FOR MULTILINE COMPARISONS
+// seperate all assignment operands from operator
+//add check for assignment operator format
+//Add isassignmentoperator/audit assignmentoperator?
+//Has second assignment operator for loop?
 
 bool correctCMDLineInput(int argc){
     if(argc == 2){
@@ -94,10 +98,6 @@ void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInform
             }
         }
         break;
-        // default:{
-        //     puts("Did default");
-        // }
-        //call is function call
     }
 }
 
@@ -122,21 +122,6 @@ bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComm
             *isMultiLineComment=false;
             return true;
         }
-    }
-
-    return false;
-}
-
-//TODO Consider combining arguments into struct
-//      & split into two functions.
-bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charIndex, const long long lineNumber){
-    if(lineOfCode[charIndex] == '(' && lineOfCode[charIndex+1] == ' '){
-        printf("Error on line %lld: white space found after '('.\n", lineNumber);
-        return true;
-    }
-    else if(lineOfCode[charIndex] == ')' && lineOfCode[charIndex-1] == ' '){
-        printf("Error on line %lld: white space found before ')'.\n", lineNumber);
-        return true;
     }
 
     return false;
@@ -234,22 +219,35 @@ bool isWhileLoop(const char* lineOfCode, const int lineSize){
 }
 
 void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation){
-    for(int charInLine=0; charInLine < lineInformation->currentLineSize; ++charInLine){
-        if(lineOfCode[charInLine] == '(' && lineOfCode[charInLine+1] == ' '){
-            printf("Error on line %lld: white space found after '(' on column %d.\n", lineInformation->lineNumber, charInLine+1);
+    for(int charIndex=0; charIndex < lineInformation->currentLineSize; ++charIndex){
+
+        if(isParenthesis(lineOfCode[charIndex])){
+            auditParenthesisFormat(lineOfCode, charIndex, lineInformation);
         }
-        else if(lineOfCode[charInLine] == ')' && lineOfCode[charInLine-1] == ' '){
-            printf("Error on line %lld: white space found before ')' on column %d.\n", lineInformation->lineNumber, charInLine+1);
+        else if(isSemiColon(lineOfCode[charIndex])){
+            auditSemiColonFormat(lineOfCode, charIndex, lineInformation);
         }
-        else if(lineOfCode[charInLine] == ';' && lineOfCode[charInLine-1] == ' '){
-            printf("Error on line %lld: white space found before ';' on column %d.\n", lineInformation->lineNumber, charInLine+1);
-        }
-        else if(lineOfCode[charInLine] == ';' && lineOfCode[charInLine+1] != ' '){
-            printf("Error on line %lld: white space not found after ';' on column %d.\n", lineInformation->lineNumber, charInLine+1);
+        else if(isComparisonOperator(lineOfCode[charIndex])){
+            auditComparisonOperatorFormat(lineOfCode, charIndex, lineInformation);
         }
     }
+}
 
-    //Add switch statement/switch func call here
+bool isSemiColon(const char charInLineOfCode){
+    if(charInLineOfCode == ';'){
+        return true;
+    }
+
+    return false;
+}
+
+void auditSemiColonFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation){
+    if(lineOfCode[charIndex-1] == ' '){
+        printf("Error on line %lld: white space found before ';' on column %d.\n", lineInformation->lineNumber, charIndex+1);
+    }
+    else if(lineOfCode[charIndex+1] != ' '){
+        printf("Error on line %lld: white space not found after ';' on column %d.\n", lineInformation->lineNumber, charIndex+1);
+    }
 }
 
 bool isForLoop(const char* lineOfCode, const int lineSize){
