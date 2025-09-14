@@ -1,6 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
-#include "lineInformation.h"
+#include "lineOfCode.h"
 #include "codeFile.h"
 
 #ifndef library_h
@@ -11,51 +11,51 @@ bool correctCMDLineInput(int argc);
 
 FILE* openCodeFile(struct CodeFile* codeFile);
 
-char getFirstCharInLine(const char* lineOfCode, const int lineSize);
+bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
-bool isComment(const char* lineOfCode, const int lineSize, bool* isMultiLineComment);
+bool isComment(struct LineOfCode* lineOfCode, const int lineSize);
 
-bool isWhileLoop(const char* lineOfCode, const int lineSize);
+bool isWhileLoop(const struct LineOfCode* lineOfCode, const int lineSize);
 
-bool isForLoop(const char* lineOfCode, const int lineSize);
+bool isForLoop(const struct LineOfCode* lineOfCode, const int lineSize);
 
-bool checkForParenthesisAndWhiteSpace(const char* lineOfCode, const int charIndex, const long long lineNumber);
+// bool checkForParenthesisAndWhiteSpace(const struct LineOfCode* lineOfCode, const int charIndex, const long long lineNumber);
 
-void auditConditionalStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
+void auditConditionalStatementFormat(const struct LineOfCode* lineOfCode);
 
-void isCorrectForLoopFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
+void isCorrectForLoopFormat(const struct LineOfCode* lineOfCode);
 
 //change currentLineSize to lineSize?
-bool isWhiteSpaceAtEndOfLine(const char* lineOfCode, const int8_t currentLineSize);
+bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode, const int8_t currentLineSize);
 
-bool isIfStatement(const char* lineOfCode, const int lineSize);
+bool isIfStatement(const struct LineOfCode* lineOfCode, const int lineSize);
 
-bool isElseStatement(const char* lineOfCode, const int lineSize);
+bool isElseStatement(const struct LineOfCode* lineOfCode, const int lineSize);
 
-void isCorrectElseStatementFormat(const char* lineOfCode, const struct LineInformation* lineInformation);
+void isCorrectElseStatementFormat(const struct LineOfCode* lineOfCode);
 
-char getFirstCharInLine(const char* lineOfCode, const int lineSize);
+char getFirstCharInLine(const struct LineOfCode* lineOfCode, const int lineSize);
 
-void matchFirstCharInLineToInstruction(const char* lineOfCode, struct LineInformation* lineInformation);
+void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode);
 
-bool isElseIfStatement(const char* lineOfCode, const int lineSize);
+bool isElseIfStatement(const struct LineOfCode* lineOfCode, const int lineSize);
 
-int findFirstNonSpaceCharInLine(const char* lineOfCode, const int lineSize);
+int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode, const int lineSize);
 
-void grabCharsFromString(const char* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
+void grabCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
 
 bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode);
 
 bool isComparisonOperator(const char charInLineOfCode);
 
-void auditComparisonOperatorFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation);
+void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const int charIndex);
 
 bool isParenthesis(const char charInLineOfCode);
 
-void auditParenthesisFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation);
+void auditParenthesisFormat(const struct LineOfCode* lineOfCode, const int charIndex);
 
 bool isSemiColon(const char charInLineOfCode);
 
-void auditSemiColonFormat(const char* lineOfCode, const int charIndex, const struct LineInformation* lineInformation);
+void auditSemiColonFormat(const struct LineOfCode* lineOfCode, const int charIndex);
 
 #endif
