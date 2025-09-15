@@ -11,7 +11,6 @@
 //add check for assignment operator format
 //Add isassignmentoperator/audit assignmentoperator?
 //Has second assignment operator for loop?
-//Break up isLine
 //Breakup Readline
 //move main into a function
 
@@ -150,29 +149,51 @@ void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode){
 }
 
 bool isComment(struct LineOfCode* lineOfCode){
-    // printf("Line is of size %d\n", lineSize);
-
-    for(int i = 0; i < lineOfCode->lineSize; ++i){
-        if(lineOfCode->codeText[i] == ' '){
+    for(int charIndex = 0; charIndex < lineOfCode->lineSize; ++charIndex){
+        if(lineOfCode->codeText[charIndex] == ' '){
             continue;
         }
-        
-        //Confirm '/' can only be used for comments.
-        if(lineOfCode->codeText[i] == '/'){
-            if(lineOfCode->codeText[i+1] == '*'){
-                lineOfCode->isMultiLineComment = true;
+
+        if(lineOfCode->codeText[charIndex] == '/'){
+            if(lineOfCode->codeText[charIndex + 1] == '/'){         
+                return true;
+            } 
+            else if(isStartOfMultiLineComment(lineOfCode, charIndex)){
+                setMultiLineCommentFlag(lineOfCode);
+                return true;
             }
-
-            return true;
-        }
-
-        if(lineOfCode->codeText[i] == '*' && lineOfCode->codeText[i+1] == '/'){
-            lineOfCode->isMultiLineComment = false;
-            return true;
+            else if(isEndOfMultiLineComment(lineOfCode, charIndex)){
+                resetMultiLineCommentFlag(lineOfCode);
+                return true;
+            }
         }
     }
 
     return false;
+}
+
+bool isStartOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex){
+    if(lineOfCode->codeText[charIndex + 1] == '*' ){
+        return true;
+    }
+
+    return false;
+}
+
+void setMultiLineCommentFlag(struct LineOfCode* lineOfCode){
+    lineOfCode->isMultiLineComment = true;
+}
+
+bool isEndOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex){
+    if(lineOfCode->codeText[charIndex - 1] == '*'){
+        return true;
+    }
+
+    return false;
+}
+
+void resetMultiLineCommentFlag(struct LineOfCode* lineOfCode){
+    lineOfCode->isMultiLineComment = false;
 }
 
 bool isParenthesis(const char charInLineOfCode){

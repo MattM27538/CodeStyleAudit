@@ -15,6 +15,14 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
 bool isComment(struct LineOfCode* lineOfCode);
 
+bool isStartOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex);
+
+void setMultiLineCommentFlag(struct LineOfCode* lineOfCode);
+
+bool isEndOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex);
+
+void resetMultiLineCommentFlag(struct LineOfCode* lineOfCode);
+
 bool isWhileLoop(const struct LineOfCode* lineOfCode);
 
 bool isForLoop(const struct LineOfCode* lineOfCode);
