@@ -14,7 +14,7 @@ int main(int argc, char* argv[]){
     struct CodeFile codeFile = {.codeFilePointer = NULL,
            .codeFileName = argv[1], .readOnly = "r"};
 
-    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .currentLineSize = 0, 
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
            .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
            .firstCharInLine = '\n'};
 
