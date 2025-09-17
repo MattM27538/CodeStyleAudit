@@ -1,5 +1,5 @@
 #include <stdbool.h>
-#include "library.h"
+#include "codeStyleAudit.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -255,7 +255,7 @@ void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const in
     }
 }
 
-bool isForLoop( const struct LineOfCode* lineOfCode){
+bool isForLoop(const struct LineOfCode* lineOfCode){
     const char* forStringLiteral = "for(";
     
     char firstFourCharsInLineOfCode[5];

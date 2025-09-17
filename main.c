@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "LineOfCode.h"
-#include "library.h"
+#include "codeStyleAudit.h"
 #include <assert.h>
 #include <stdint.h>
 
