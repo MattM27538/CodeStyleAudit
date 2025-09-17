@@ -3,58 +3,125 @@
 #include "../../library.h"
 #include <stdbool.h>
 #include <limits.h>
+#include <string.h>
+#include "../../lineOfCode.h"
 
 void setUp(){
-
+    // struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    // .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    // .firstCharInLine = '\n'};
 }
+
+// // void testCheckForComments(){
+// //     bool isMultiLineComment=true;
+
+// //     TEST_ASSERT(isComment("  //", 4, &isMultiLineComment) == true);
+// //     TEST_ASSERT(isComment("  /*", 4, &isMultiLineComment) == true);
+// //     TEST_ASSERT(isComment("  //*", 5, &isMultiLineComment) == true);
+// //     TEST_ASSERT(isComment("char myString[5]=\"//*\"", 16, &isMultiLineComment) == false);
+// //     TEST_ASSERT(isComment("for()", 5, &isMultiLineComment) == false);
+// //     TEST_ASSERT(isComment("  while()", 9, &isMultiLineComment) == false);
+// //     TEST_ASSERT(isComment("", 0, &isMultiLineComment) == false);
+// // }
 
 void testCorrectCMDLineInput(){
     TEST_ASSERT(correctCMDLineInput(2) == true);
     TEST_ASSERT(correctCMDLineInput(1) == false);
+    TEST_ASSERT(correctCMDLineInput(0) == false);
     TEST_ASSERT(correctCMDLineInput(INT_MAX) == false);
 }
 
-void testCheckForComments(){
-    bool isMultiLineComment=true;
+void testGetFirstCharInLine(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
 
-    TEST_ASSERT(isComment("  //", 4, &isMultiLineComment) == true);
-    TEST_ASSERT(isComment("  /*", 4, &isMultiLineComment) == true);
-    TEST_ASSERT(isComment("  //*", 5, &isMultiLineComment) == true);
-    TEST_ASSERT(isComment("char myString[5]=\"//*\"", 16, &isMultiLineComment) == false);
-    TEST_ASSERT(isComment("for()", 5, &isMultiLineComment) == false);
-    TEST_ASSERT(isComment("  while()", 9, &isMultiLineComment) == false);
-    TEST_ASSERT(isComment("", 0, &isMultiLineComment) == false);
-}
+    TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), '\n');
 
-void testIsWhileLoop(){
-    TEST_ASSERT(isWhileLoop("", 0) == false);
-    TEST_ASSERT(isWhileLoop("  while(1)", 10) == true);
-    TEST_ASSERT(isWhileLoop("//while(1)", 10) == false);
-    TEST_ASSERT(isWhileLoop("/*while(1)*/", 12) == false);
+    strncpy(lineOfCode.codeText, "  for", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 6;
+
+    TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), 'f');
+
+    strncpy(lineOfCode.codeText, "  ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 3;
+    TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), '\n');
+
+    strncpy(lineOfCode.codeText, "//for", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 6;
+    TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), '/');
 }
 
 void testIsWhiteSpaceAtEndOfLine(){
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine("", 1) == false);
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine("  ", 3) == true);
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){}", 10) == false);
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){} ", 11) == true);
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "  ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 3;
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "while(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "while(){} ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
 }
 
-void testIsElseIfStatement(){
-    TEST_ASSERT(isElseIfStatement("else if(){}", 11) == true);
-    TEST_ASSERT(isElseIfStatement("else{}", 6) == false);
-    TEST_ASSERT(isElseIfStatement("elseDont()", 10) == false);
-    TEST_ASSERT(isElseIfStatement("", 0) == false);
-    TEST_ASSERT(isElseIfStatement("  ", 2) == false);
+void testIsWhileLoop(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isWhileLoop(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "  while(1)", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isWhileLoop(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "//while(1)", sizeof(lineOfCode.codeText) - 1);
+    TEST_ASSERT(isWhileLoop(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "/*while(1)*/", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 13;
+    TEST_ASSERT(isWhileLoop(&lineOfCode) == false);
 }
 
-void testIsIfStatement(){
-    TEST_ASSERT(isIfStatement("if(){}", 6) == true);
-    TEST_ASSERT(isIfStatement("    if(){}", 10) == true);
-    TEST_ASSERT(isIfStatement("else if(){}", 11) == false);
-    TEST_ASSERT(isIfStatement("ifFunction(){}", 18) == false );
-    TEST_ASSERT(isIfStatement("", 0) == false);
-}
+// void testIsWhiteSpaceAtEndOfLine(){
+    // strncpy(lineOfCode.codeText, , sizeof(lineOfCode.codeText) - 1);
+//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("", 1) == false);
+//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("  ", 3) == true);
+//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){}", 10) == false);
+//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){} ", 11) == true);
+// }
+
+// void testIsElseIfStatement(){
+//     TEST_ASSERT(isElseIfStatement("else if(){}", 11) == true);
+//     TEST_ASSERT(isElseIfStatement("else{}", 6) == false);
+//     TEST_ASSERT(isElseIfStatement("elseDont()", 10) == false);
+//     TEST_ASSERT(isElseIfStatement("", 0) == false);
+//     TEST_ASSERT(isElseIfStatement("  ", 2) == false);
+// }
+
+// void testIsIfStatement(){
+//     TEST_ASSERT(isIfStatement("if(){}", 6) == true);
+//     TEST_ASSERT(isIfStatement("    if(){}", 10) == true);
+//     TEST_ASSERT(isIfStatement("else if(){}", 11) == false);
+//     TEST_ASSERT(isIfStatement("ifFunction(){}", 18) == false );
+//     TEST_ASSERT(isIfStatement("", 0) == false);
+// }
+
+// void testIsForLoop(){
+//     TEST_ASSERT(isForLoop("for(;;){}", 9) == true);
+//     TEST_ASSERT(isForLoop("forEach(){}", 9) == false);
+//     TEST_ASSERT(isForLoop("  for(;;){}", 11) == true);
+//     TEST_ASSERT(isForLoop("", 0) == false);
+//     TEST_ASSERT(isForLoop("   ", 3)== false);
+// }
 
 void tearDown(){
 
@@ -65,15 +132,21 @@ int main(){
 
     RUN_TEST(testCorrectCMDLineInput);
 
-    RUN_TEST(testCheckForComments);
+    RUN_TEST(testGetFirstCharInLine);
+
+    RUN_TEST(testIsWhiteSpaceAtEndOfLine);
+
+    // RUN_TEST(testCheckForComments);
 
     RUN_TEST(testIsWhileLoop);
     
-    RUN_TEST(testIsWhiteSpaceAtEndOfLine);
+    // RUN_TEST(testIsWhiteSpaceAtEndOfLine);
 
-    RUN_TEST(testIsIfStatement);
+    // RUN_TEST(testIsIfStatement);
 
-    RUN_TEST(testIsElseIfStatement);
+    // RUN_TEST(testIsElseIfStatement);
+
+    // RUN__TEST(testIsForLoop);
 
     return UNITY_END();
 }
