@@ -66,7 +66,12 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
 
     lineOfCode->firstCharInLine = getFirstCharInLine(lineOfCode);
 
-    matchFirstCharInLineToInstruction(lineOfCode);
+    if(!isComment(lineOfCode)){
+        matchFirstCharInLineToInstruction(lineOfCode);
+    }
+    else if(lineOfCode->isMultiLineComment){
+        checkForEndOfMultiLineComment(lineOfCode);
+    }
 
     if(isWhiteSpaceAtEndOfLine(lineOfCode)){
         printf("Style error: Found trailing whitespace on line %lld\n", lineOfCode->lineNumber);
@@ -83,22 +88,37 @@ char getFirstCharInLine(const struct LineOfCode* lineOfCode){
             return lineOfCode->codeText[charIndex];
         }
     }
-    
+
     return '\n';
+}
+
+bool isComment(struct LineOfCode* lineOfCode){
+    for(int charIndex = 0; charIndex < lineOfCode->lineSize; ++charIndex){
+        if(lineOfCode->codeText[charIndex] == ' '){
+            continue;
+        }
+
+        if(lineOfCode->codeText[charIndex] == '/'){
+            if(lineOfCode->codeText[charIndex + 1] == '/'){         
+                return true;
+            } 
+            else if(isStartOfMultiLineComment(lineOfCode, charIndex)){
+                setMultiLineCommentFlag(lineOfCode);
+                return true;
+            }
+            else if(isEndOfMultiLineComment(lineOfCode, charIndex)){
+                resetMultiLineCommentFlag(lineOfCode);
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 //lineOfCode->codeText and firstCharInLine add to struct?
 void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode){
     switch(lineOfCode->firstCharInLine){
-        case '/':
-        {   
-            //TODO: Move to not only checking for first char in line to check for multiline comment end.
-            if(isComment(lineOfCode)
-            || lineOfCode->isMultiLineComment){
-
-            }
-        }
-        break;
         case 'w':
         {
             if(isWhileLoop(lineOfCode)){
@@ -135,34 +155,22 @@ void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode){
     }
 }
 
-bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode){
-    //If increment for \n char is added this needs to change to currentLineSize-1
-    if((lineOfCode->codeText[lineOfCode->lineSize-2] == ' ') && (lineOfCode->lineSize != 1)){
-        return true;
-    }
-
-    return false;
-}
-
-bool isComment(struct LineOfCode* lineOfCode){
-    for(int charIndex = 0; charIndex < lineOfCode->lineSize; ++charIndex){
+void checkForEndOfMultiLineComment(struct LineOfCode* lineOfCode){
+for(int charIndex = 0; charIndex < lineOfCode->lineSize-1; ++charIndex){
         if(lineOfCode->codeText[charIndex] == ' '){
             continue;
         }
 
-        if(lineOfCode->codeText[charIndex] == '/'){
-            if(lineOfCode->codeText[charIndex + 1] == '/'){         
-                return true;
-            } 
-            else if(isStartOfMultiLineComment(lineOfCode, charIndex)){
-                setMultiLineCommentFlag(lineOfCode);
-                return true;
-            }
-            else if(isEndOfMultiLineComment(lineOfCode, charIndex)){
-                resetMultiLineCommentFlag(lineOfCode);
-                return true;
-            }
+        if(lineOfCode->codeText[charIndex] == '*' && lineOfCode->codeText[charIndex+1]){
+            resetMultiLineCommentFlag(lineOfCode);
         }
+    }
+}
+
+bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode){
+    //If increment for \n char is added this needs to change to currentLineSize-1
+    if((lineOfCode->codeText[lineOfCode->lineSize-2] == ' ') && (lineOfCode->lineSize != 1)){
+        return true;
     }
 
     return false;

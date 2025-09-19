@@ -15,11 +15,13 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
 char getFirstCharInLine(const struct LineOfCode* lineOfCode);
 
+bool isComment(struct LineOfCode* lineOfCode);
+
 void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode);
 
-bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode);
+void checkForEndOfMultiLineComment(struct LineOfCode* lineOfCode);
 
-bool isComment(struct LineOfCode* lineOfCode);
+bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode);
 
 bool isStartOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex);
 
