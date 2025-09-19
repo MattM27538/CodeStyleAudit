@@ -38,7 +38,7 @@ FILE* openCodeFile(struct CodeFile* codeFile){
 bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
     char charInCode;
     
-    //Might be an issue with while != EOF CHECK
+    //TODO Might be an issue with while != EOF CHECK
     // while((charInCode=fgetc(codeFile)) != EOF){
     for(int i = 0; i < lineOfCode->maxLineSize; ++i){
         charInCode = fgetc(codeFile);
@@ -351,10 +351,8 @@ bool isElseIfStatement(const struct LineOfCode* lineOfCode){
     
     char firstSevenCharsInLineOfCode[8];
     
-    //rename var
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    //change 4th parameter name to sizeof()
     grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(elseIfStringLiteral, firstSevenCharsInLineOfCode);
@@ -382,7 +380,7 @@ int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode){
     return 0;
 }
 
-//rename and shrink parameters
+//TODO rename and shrink parameters
 void grabCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int firstNonEmptyindex){
     for(int charIndex = 0; charIndex < charsInLineOfCodeSize; ++charIndex){
         charsInLineOfCode[charIndex] = lineOfCode->codeText[firstNonEmptyindex+charIndex];

@@ -6,7 +6,6 @@
 #ifndef library_h
 #define library_h
 
-//correct order of functions
 bool correctCMDLineInput(int argc);
 
 FILE* openCodeFile(struct CodeFile* codeFile);
@@ -64,11 +63,5 @@ void grabCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineO
 bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode);
 
 void auditConditionalStatementFormat(const struct LineOfCode* lineOfCode);
-
-
-
-
-
-
 
 #endif
