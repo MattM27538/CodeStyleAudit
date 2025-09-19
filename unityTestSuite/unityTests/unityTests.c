@@ -1,6 +1,6 @@
 #include "../unity.h"
 #include "../unity.c"
-#include "../../library.h"
+#include "../../codeStyleAudit.h"
 #include <stdbool.h>
 #include <limits.h>
 #include <string.h>
@@ -72,6 +72,42 @@ void testIsWhiteSpaceAtEndOfLine(){
     TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
 }
 
+void testIsComment(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isComment(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "  ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 3;
+    TEST_ASSERT(isComment(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "//", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 3;
+    TEST_ASSERT(isComment(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "/*", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 3;
+    TEST_ASSERT(isComment(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "  //", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 5;
+    TEST_ASSERT(isComment(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "  */", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 5;
+    TEST_ASSERT(isComment(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "for(){}//", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isComment(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "for(){}*/", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isComment(&lineOfCode) == true);
+}
+
 void testIsWhileLoop(){
     struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
     .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
@@ -135,6 +171,8 @@ int main(){
     RUN_TEST(testGetFirstCharInLine);
 
     RUN_TEST(testIsWhiteSpaceAtEndOfLine);
+
+    RUN_TEST(testIsComment);
 
     // RUN_TEST(testCheckForComments);
 

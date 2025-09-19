@@ -83,7 +83,7 @@ char getFirstCharInLine(const struct LineOfCode* lineOfCode){
             return lineOfCode->codeText[charIndex];
         }
     }
-    //This will probably break something.
+    
     return '\n';
 }
 
@@ -91,7 +91,8 @@ char getFirstCharInLine(const struct LineOfCode* lineOfCode){
 void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode){
     switch(lineOfCode->firstCharInLine){
         case '/':
-        {
+        {   
+            //TODO: Move to not only checking for first char in line to check for multiline comment end.
             if(isComment(lineOfCode)
             || lineOfCode->isMultiLineComment){
 
