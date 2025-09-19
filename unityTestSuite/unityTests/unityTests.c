@@ -6,23 +6,7 @@
 #include <string.h>
 #include "../../lineOfCode.h"
 
-void setUp(){
-    // struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
-    // .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
-    // .firstCharInLine = '\n'};
-}
-
-// // void testCheckForComments(){
-// //     bool isMultiLineComment=true;
-
-// //     TEST_ASSERT(isComment("  //", 4, &isMultiLineComment) == true);
-// //     TEST_ASSERT(isComment("  /*", 4, &isMultiLineComment) == true);
-// //     TEST_ASSERT(isComment("  //*", 5, &isMultiLineComment) == true);
-// //     TEST_ASSERT(isComment("char myString[5]=\"//*\"", 16, &isMultiLineComment) == false);
-// //     TEST_ASSERT(isComment("for()", 5, &isMultiLineComment) == false);
-// //     TEST_ASSERT(isComment("  while()", 9, &isMultiLineComment) == false);
-// //     TEST_ASSERT(isComment("", 0, &isMultiLineComment) == false);
-// // }
+void setUp(){}
 
 void testCorrectCMDLineInput(){
     TEST_ASSERT(correctCMDLineInput(2) == true);
@@ -50,26 +34,6 @@ void testGetFirstCharInLine(){
     strncpy(lineOfCode.codeText, "//for", sizeof(lineOfCode.codeText) - 1);
     lineOfCode.lineSize = 6;
     TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), '/');
-}
-
-void testIsWhiteSpaceAtEndOfLine(){
-    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
-    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
-    .firstCharInLine = '\n'};
-
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == false);
-    
-    strncpy(lineOfCode.codeText, "  ", sizeof(lineOfCode.codeText) - 1);
-    lineOfCode.lineSize = 3;
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
-
-    strncpy(lineOfCode.codeText, "while(){}", sizeof(lineOfCode.codeText) - 1);
-    lineOfCode.lineSize = 10;
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == false);
-
-    strncpy(lineOfCode.codeText, "while(){} ", sizeof(lineOfCode.codeText) - 1);
-    lineOfCode.lineSize = 11;
-    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
 }
 
 void testIsComment(){
@@ -106,6 +70,30 @@ void testIsComment(){
     strncpy(lineOfCode.codeText, "for(){}*/", sizeof(lineOfCode.codeText) - 1);
     lineOfCode.lineSize = 10;
     TEST_ASSERT(isComment(&lineOfCode) == true);
+}
+
+void testIsWhiteSpaceAtEndOfLine(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "  ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 3;
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "while(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "while(){} ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isWhiteSpaceAtEndOfLine(&lineOfCode) == true);
+}
+
+void testIsStartOfMultiLineComment(){
+
 }
 
 void testIsWhileLoop(){
@@ -170,11 +158,11 @@ int main(){
 
     RUN_TEST(testGetFirstCharInLine);
 
-    RUN_TEST(testIsWhiteSpaceAtEndOfLine);
-
     RUN_TEST(testIsComment);
 
-    // RUN_TEST(testCheckForComments);
+    RUN_TEST(testIsWhiteSpaceAtEndOfLine);
+
+    RUN_TEST(testIsStartOfMultiLineComment);
 
     RUN_TEST(testIsWhileLoop);
     
