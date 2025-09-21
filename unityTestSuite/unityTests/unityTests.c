@@ -93,7 +93,28 @@ void testIsWhiteSpaceAtEndOfLine(){
 }
 
 void testIsStartOfMultiLineComment(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
 
+    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 0) == false);
+    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 2) == false);
+
+    strncpy(lineOfCode.codeText, "/* ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 4;
+    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 0) == true);
+
+    strncpy(lineOfCode.codeText, "// ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 4;
+    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 0) == false);
+
+    strncpy(lineOfCode.codeText, "    /* ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 8;
+    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 4) == true);
+
+    strncpy(lineOfCode.codeText, "   //* ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 8;
+    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 3) == false);
 }
 
 void testIsWhileLoop(){
