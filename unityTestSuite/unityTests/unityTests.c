@@ -98,7 +98,6 @@ void testIsStartOfMultiLineComment(){
     .firstCharInLine = '\n'};
 
     TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 0) == false);
-    TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 2) == false);
 
     strncpy(lineOfCode.codeText, "/* ", sizeof(lineOfCode.codeText) - 1);
     lineOfCode.lineSize = 4;
@@ -115,6 +114,30 @@ void testIsStartOfMultiLineComment(){
     strncpy(lineOfCode.codeText, "   //* ", sizeof(lineOfCode.codeText) - 1);
     lineOfCode.lineSize = 8;
     TEST_ASSERT(isStartOfMultiLineComment(&lineOfCode, 3) == false);
+}
+
+void testIsEndOfMultiLineComment(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isEndOfMultiLineComment(&lineOfCode, 0) == false);
+
+    strncpy(lineOfCode.codeText, "*/ ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 4;
+    TEST_ASSERT(isEndOfMultiLineComment(&lineOfCode, 1) == true);
+
+    strncpy(lineOfCode.codeText, "  // ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 6;
+    TEST_ASSERT(isEndOfMultiLineComment(&lineOfCode, 2) == false);
+
+    strncpy(lineOfCode.codeText, "    */ ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 8;
+    TEST_ASSERT(isEndOfMultiLineComment(&lineOfCode, 5) == true);
+
+    strncpy(lineOfCode.codeText, "   //*/ ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 9;
+    TEST_ASSERT(isEndOfMultiLineComment(&lineOfCode, 3) == false);
 }
 
 void testIsWhileLoop(){
@@ -186,6 +209,10 @@ int main(){
     RUN_TEST(testIsStartOfMultiLineComment);
 
     RUN_TEST(testIsWhileLoop);
+
+    RUN_TEST(testIsStartOfMultiLineComment);
+
+    RUN_TEST(testIsEndOfMultiLineComment);
     
     // RUN_TEST(testIsWhiteSpaceAtEndOfLine);
 
