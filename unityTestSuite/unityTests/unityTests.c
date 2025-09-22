@@ -302,7 +302,25 @@ void testIsWhileLoop(){
     TEST_ASSERT(isWhileLoop(&lineOfCode) == false);
 }
 
+void testFindFirstNonSpaceCharInLine(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
 
+    TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 0);
+    
+    strncpy(lineOfCode.codeText, "   ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 4;
+    TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 0);
+
+    strncpy(lineOfCode.codeText, "  f", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 4;
+    TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 2);
+
+    strncpy(lineOfCode.codeText, "   //", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 6;
+    TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 3);
+}
 
 void tearDown(){
 
@@ -340,6 +358,8 @@ int main(){
     RUN_TEST(testIsElseStatement);
 
     RUN_TEST(testIsElseIfStatement);
+
+    RUN_TEST(testFindFirstNonSpaceCharInLine);
 
     // RUN__TEST(testIsForLoop);
 
