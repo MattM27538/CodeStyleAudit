@@ -20,7 +20,10 @@ int main(int argc, char* argv[]){
 
     codeFile.codeFilePointer = openCodeFile(&codeFile);
 
-    while(readLine(codeFile.codeFilePointer, &lineOfCode));
+    while(readLine(codeFile.codeFilePointer, &lineOfCode)){
+        auditLine(&lineOfCode);
+        updateLineOfCodeMetaData(&lineOfCode);
+    };
     
     fclose(codeFile.codeFilePointer);
 

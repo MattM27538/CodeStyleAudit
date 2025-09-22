@@ -12,6 +12,10 @@ FILE* openCodeFile(struct CodeFile* codeFile);
 
 bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
+void auditLine(struct LineOfCode* lineOfCode);
+
+void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode);
+
 char getFirstCharInLine(const struct LineOfCode* lineOfCode);
 
 bool isComment(struct LineOfCode* lineOfCode);
@@ -34,13 +38,13 @@ bool isParenthesis(const char charInLineOfCode);
 
 void auditParenthesisFormat(const struct LineOfCode* lineOfCode, const int charIndex);
 
-bool isComparisonOperator(const char charInLineOfCode);
-
 void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const int charIndex);
 
 bool isForLoop(const struct LineOfCode* lineOfCode);
 
 void auditForLoopFormat(const struct LineOfCode* lineOfCode);
+
+bool isComparisonOperator(const char charInLineOfCode);
 
 bool isSemiColon(const char charInLineOfCode);
 
@@ -58,7 +62,7 @@ bool isWhileLoop(const struct LineOfCode* lineOfCode);
 
 int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode);
 
-void grabCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
+void grabNCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
 
 bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode);
 
