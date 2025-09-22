@@ -322,6 +322,17 @@ void testFindFirstNonSpaceCharInLine(){
     TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 3);
 }
 
+void testIsKeywordStatement(){
+    TEST_ASSERT(isKeywordStatement("else", "else{}") == true);
+    TEST_ASSERT(isKeywordStatement("if", "if(){}") == true);
+    TEST_ASSERT(isKeywordStatement("if", "if     (){}") == true);
+    TEST_ASSERT(isKeywordStatement("while", "while(){}") == true);
+    TEST_ASSERT(isKeywordStatement("while", "while     (){}") == true);
+    TEST_ASSERT(isKeywordStatement("else if", "else if(0){}") == true);
+    TEST_ASSERT(isKeywordStatement("else if", "else{}") == false);
+    TEST_ASSERT(isKeywordStatement("else", "") == false);
+}
+
 void tearDown(){
 
 }
@@ -361,7 +372,7 @@ int main(){
 
     RUN_TEST(testFindFirstNonSpaceCharInLine);
 
-    // RUN__TEST(testIsForLoop);
+    RUN_TEST(testIsKeywordStatement);
 
     return UNITY_END();
 }
