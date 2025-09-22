@@ -140,6 +140,41 @@ void testIsEndOfMultiLineComment(){
     TEST_ASSERT(isEndOfMultiLineComment(&lineOfCode, 3) == false);
 }
 
+void testIsParenthesis(){
+    TEST_ASSERT(isParenthesis('(') == true);
+    TEST_ASSERT(isParenthesis(')') == true);
+    TEST_ASSERT(isParenthesis(' ') == false);
+    TEST_ASSERT(isParenthesis('\n') == false);
+}
+
+void testIsForLoop(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isForLoop(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "for(;;){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isForLoop(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "forEach(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 12;
+    TEST_ASSERT(isForLoop(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "  for(;;){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 12;
+    TEST_ASSERT(isForLoop(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "   ", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isForLoop(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "//for", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 16;
+    TEST_ASSERT(isForLoop(&lineOfCode) == false);
+}
+
 void testIsWhileLoop(){
     struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
     .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
@@ -183,14 +218,6 @@ void testIsWhileLoop(){
 //     TEST_ASSERT(isIfStatement("", 0) == false);
 // }
 
-// void testIsForLoop(){
-//     TEST_ASSERT(isForLoop("for(;;){}", 9) == true);
-//     TEST_ASSERT(isForLoop("forEach(){}", 9) == false);
-//     TEST_ASSERT(isForLoop("  for(;;){}", 11) == true);
-//     TEST_ASSERT(isForLoop("", 0) == false);
-//     TEST_ASSERT(isForLoop("   ", 3)== false);
-// }
-
 void tearDown(){
 
 }
@@ -214,6 +241,9 @@ int main(){
 
     RUN_TEST(testIsEndOfMultiLineComment);
     
+    RUN_TEST(testIsParenthesis);
+
+    RUN_TEST(testIsForLoop);
     // RUN_TEST(testIsWhiteSpaceAtEndOfLine);
 
     // RUN_TEST(testIsIfStatement);
