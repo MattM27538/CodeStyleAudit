@@ -13,6 +13,9 @@
 //Has second assignment operator for loop?
 //Breakup Readline
 //move main into a function
+//account for being function names starting with else, while, if. if rest of line is empty print missing ( or {, else print warning to not use as non keyword statement.
+//account for spaced out keyword statements i.e. if    (){}.
+//change func name to grabNcharsFromSTring
 
 bool correctCMDLineInput(int argc){
     if(argc == 2){
@@ -40,7 +43,7 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
     
     //TODO Might be an issue with while != EOF CHECK
     // while((charInCode=fgetc(codeFile)) != EOF){
-    for(int i = 0; i < lineOfCode->maxLineSize; ++i){
+    for(int i = 0; i < lineOfCode->maxLineSize + 1; ++i){
         charInCode = fgetc(codeFile);
         
         if(charInCode == EOF){
@@ -49,7 +52,7 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
             return lineOfCode->continueReadingFile;
         }
         
-        //Entire Program is off by 1 index because of not incrementing currentLineSize here
+        //TODO Entire Program is off by 1 index because of not incrementing currentLineSize here
         //Decide if you want to change this.
         if(charInCode == '\n'){
             break;
@@ -57,15 +60,28 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
         
         lineOfCode->codeText[lineOfCode->lineSize] = charInCode;
         ++lineOfCode->lineSize;
-        
-        if(lineOfCode->lineSize > lineOfCode->maxLineSize){
-            printf("Line %lld exceeds limit of 100 characters. Correct your code and recompile.", lineOfCode->lineNumber);
-            exit(1);
-        }   
+
+        checkLineOfCodeSize(lineOfCode);
     }
 
     lineOfCode->firstCharInLine = getFirstCharInLine(lineOfCode);
 
+    return lineOfCode->continueReadingFile;
+}
+
+void checkLineOfCodeSize(const struct LineOfCode* lineOfCode){
+    if(lineOfCodeExceeds100Chars(lineOfCode)){
+        printf("Fatal error: Line %lld exceeds limit of 100 characters."
+               " Correct your code and recompile.", lineOfCode->lineNumber);
+        exit(1);
+    }
+}
+
+bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode){
+    return lineOfCode->lineSize > lineOfCode->maxLineSize;
+}
+
+void auditLine(struct LineOfCode* lineOfCode){
     if(!isComment(lineOfCode)){
         matchFirstCharInLineToInstruction(lineOfCode);
     }
@@ -76,10 +92,11 @@ bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
     if(isWhiteSpaceAtEndOfLine(lineOfCode)){
         printf("Style error: Found trailing whitespace on line %lld\n", lineOfCode->lineNumber);
     }
+}
 
+void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode){
     lineOfCode->lineSize = 0;
     ++lineOfCode->lineNumber;
-    return lineOfCode->continueReadingFile;
 }
 
 char getFirstCharInLine(const struct LineOfCode* lineOfCode){
@@ -217,20 +234,6 @@ void auditParenthesisFormat(const struct LineOfCode* lineOfCode, const int charI
     }
 }
 
-bool isComparisonOperator(const char charInLineOfCode){
-    switch(charInLineOfCode){
-        case '<':
-        case '>':
-        case '!':
-        case '=':
-            {
-                return true;
-            }
-    }
-
-    return false;
-}
-
 void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const int charIndex){
      switch(lineOfCode->codeText[charIndex]){
                 case '<':
@@ -249,16 +252,15 @@ void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const in
                 break;
                 case '=':
                     {
-                         if(lineOfCode->codeText[charIndex+1] == '=' && lineOfCode->codeText[charIndex+2] != ' '){
+                        if(lineOfCode->codeText[charIndex+1] == '=' && lineOfCode->codeText[charIndex+2] != ' '){
                             printf("Style error on line %lld: White space not found after '=='.\n", lineOfCode->lineNumber);
                         }
                         else if(lineOfCode->codeText[charIndex-1] == '=' && lineOfCode->codeText[charIndex-2] != ' '){
                             printf("Style error on line %lld: White space not found before '=='.\n", lineOfCode->lineNumber);
                         }
-                        //TODO Check for accidental assignment operator
-                        // else if (){
-                        //     printf("Error on line %lld: assignment operator found.\n", lineNumber);
-                        // }
+                        else if(lineOfCode->codeText[charIndex+1] == ' ' && lineOfCode->codeText[charIndex-1] == ' '){
+                            printf("Style error on line %lld: Expected comparison operator. Assignment operator found.\n", lineOfCode->lineNumber);
+                        }
                     }
 
     }
@@ -271,7 +273,7 @@ bool isForLoop(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(forStringLiteral, firstFourCharsInLineOfCode);
 }
@@ -289,6 +291,20 @@ void auditForLoopFormat(const struct LineOfCode* lineOfCode){
             auditComparisonOperatorFormat(lineOfCode, charIndex);
         }
     }
+}
+
+bool isComparisonOperator(const char charInLineOfCode){
+    switch(charInLineOfCode){
+        case '<':
+        case '>':
+        case '!':
+        case '=':
+            {
+                return true;
+            }
+    }
+
+    return false;
 }
 
 bool isSemiColon(const char charInLineOfCode){
@@ -315,7 +331,7 @@ bool isIfStatement(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(ifStringLiteral, firstThreeCharsInLineOfCode);
 }
@@ -327,7 +343,7 @@ bool isElseStatement(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(elseStringLiteral, firstFourCharsInLineOfCode);
 }
@@ -353,7 +369,7 @@ bool isElseIfStatement(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(elseIfStringLiteral, firstSevenCharsInLineOfCode);
 }
@@ -365,7 +381,7 @@ bool isWhileLoop(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabCharsFromString(lineOfCode, firstSixCharsInLineOfCode, sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstSixCharsInLineOfCode, sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(whileStringLiteral, firstSixCharsInLineOfCode);
 }
@@ -381,7 +397,7 @@ int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode){
 }
 
 //TODO rename and shrink parameters
-void grabCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int firstNonEmptyindex){
+void grabNCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int firstNonEmptyindex){
     for(int charIndex = 0; charIndex < charsInLineOfCodeSize; ++charIndex){
         charsInLineOfCode[charIndex] = lineOfCode->codeText[firstNonEmptyindex+charIndex];
     }

@@ -12,6 +12,10 @@ FILE* openCodeFile(struct CodeFile* codeFile);
 
 bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
+void checkLineOfCodeSize(const struct LineOfCode* lineOfCode);
+
+bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode);
+
 void auditLine(struct LineOfCode* lineOfCode);
 
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode);
