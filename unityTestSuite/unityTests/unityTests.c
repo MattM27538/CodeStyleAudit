@@ -184,6 +184,105 @@ void testIsComparisonOperator(){
     TEST_ASSERT(isComparisonOperator('p') == false);
 }
 
+void testIsSemiColon(){
+    TEST_ASSERT(isSemiColon(';') == true);
+    TEST_ASSERT(isSemiColon('\n') == false);
+    TEST_ASSERT(isSemiColon(' ') == false);
+    TEST_ASSERT(isSemiColon('i') == false);
+}
+
+void testIsIfStatement(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isIfStatement(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "if(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 7;
+    TEST_ASSERT(isIfStatement(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "    if(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isIfStatement(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "else if(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 12;
+    TEST_ASSERT(isIfStatement(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "ifFunction(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 15;
+    TEST_ASSERT(isIfStatement(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 0;
+    TEST_ASSERT(isIfStatement(&lineOfCode) == false);
+}
+
+void testIsElseStatement(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isElseStatement(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "else {}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 8;
+    TEST_ASSERT(isElseStatement(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "   else{}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isElseStatement(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "else", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 5;
+    TEST_ASSERT(isElseStatement(&lineOfCode) == true);
+
+    strncpy(lineOfCode.codeText, "//else", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 7;
+    TEST_ASSERT(isElseStatement(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "elseDont()", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isElseStatement(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 0;
+    TEST_ASSERT(isElseStatement(&lineOfCode) == false);
+}
+
+void testIsElseIfStatement(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "else if(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 12;
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "  else if(){}", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 14;
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == true);
+    
+    strncpy(lineOfCode.codeText, "//else if", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == false);
+    
+    strncpy(lineOfCode.codeText, "/*else if", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 10;
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "elseIfDont()", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 11;
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == false);
+
+    strncpy(lineOfCode.codeText, "", sizeof(lineOfCode.codeText) - 1);
+    lineOfCode.lineSize = 0;
+    TEST_ASSERT(isElseIfStatement(&lineOfCode) == false);
+}
+
 void testIsWhileLoop(){
     struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
     .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
@@ -203,29 +302,7 @@ void testIsWhileLoop(){
     TEST_ASSERT(isWhileLoop(&lineOfCode) == false);
 }
 
-// void testIsWhiteSpaceAtEndOfLine(){
-    // strncpy(lineOfCode.codeText, , sizeof(lineOfCode.codeText) - 1);
-//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("", 1) == false);
-//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("  ", 3) == true);
-//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){}", 10) == false);
-//     TEST_ASSERT(isWhiteSpaceAtEndOfLine("while(){} ", 11) == true);
-// }
 
-// void testIsElseIfStatement(){
-//     TEST_ASSERT(isElseIfStatement("else if(){}", 11) == true);
-//     TEST_ASSERT(isElseIfStatement("else{}", 6) == false);
-//     TEST_ASSERT(isElseIfStatement("elseDont()", 10) == false);
-//     TEST_ASSERT(isElseIfStatement("", 0) == false);
-//     TEST_ASSERT(isElseIfStatement("  ", 2) == false);
-// }
-
-// void testIsIfStatement(){
-//     TEST_ASSERT(isIfStatement("if(){}", 6) == true);
-//     TEST_ASSERT(isIfStatement("    if(){}", 10) == true);
-//     TEST_ASSERT(isIfStatement("else if(){}", 11) == false);
-//     TEST_ASSERT(isIfStatement("ifFunction(){}", 18) == false );
-//     TEST_ASSERT(isIfStatement("", 0) == false);
-// }
 
 void tearDown(){
 
@@ -256,9 +333,13 @@ int main(){
 
     RUN_TEST(testIsComparisonOperator);
 
-    // RUN_TEST(testIsIfStatement);
+    RUN_TEST(testIsSemiColon);
 
-    // RUN_TEST(testIsElseIfStatement);
+    RUN_TEST(testIsIfStatement);
+
+    RUN_TEST(testIsElseStatement);
+
+    RUN_TEST(testIsElseIfStatement);
 
     // RUN__TEST(testIsForLoop);
 
