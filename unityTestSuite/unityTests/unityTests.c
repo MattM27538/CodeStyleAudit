@@ -175,6 +175,15 @@ void testIsForLoop(){
     TEST_ASSERT(isForLoop(&lineOfCode) == false);
 }
 
+void testIsComparisonOperator(){
+    TEST_ASSERT(isComparisonOperator('<') == true);
+    TEST_ASSERT(isComparisonOperator('>') == true);
+    TEST_ASSERT(isComparisonOperator('=') == true);
+    TEST_ASSERT(isComparisonOperator('!') == true);
+    TEST_ASSERT(isComparisonOperator(' ') == false);
+    TEST_ASSERT(isComparisonOperator('p') == false);
+}
+
 void testIsWhileLoop(){
     struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
     .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
@@ -244,7 +253,8 @@ int main(){
     RUN_TEST(testIsParenthesis);
 
     RUN_TEST(testIsForLoop);
-    // RUN_TEST(testIsWhiteSpaceAtEndOfLine);
+
+    RUN_TEST(testIsComparisonOperator);
 
     // RUN_TEST(testIsIfStatement);
 
