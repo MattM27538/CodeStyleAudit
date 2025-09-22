@@ -5,24 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//TODO:
-//CHECK FIRST CHAR OF LINE THEN CALL APPROPRIATE FUNCTION
-//CHECK FOR MULTILINE COMPARISONS
-//add check for assignment operator format
-//Add isassignmentoperator/audit assignmentoperator?
-//Has second assignment operator for loop?
-//Breakup Readline
-//move main into a function
-//account for being function names starting with else, while, if. if rest of line is empty print missing ( or {, else print warning to not use as non keyword statement.
-//account for spaced out keyword statements i.e. if    (){}.
-//change func name to grabNcharsFromSTring
-
 bool correctCMDLineInput(int argc){
     if(argc == 2){
         return true;
     }
 
-    fprintf(stderr, "Incorrect number of command line arguments found. Expected 2, found %d.\nExiting.", argc);
+    fprintf(stderr, "Incorrect number of command line arguments found. Expected 2, found"
+            " %d.\nExiting.", argc);
 
     return false;
 }
@@ -39,42 +28,53 @@ FILE* openCodeFile(struct CodeFile* codeFile){
 }
 
 bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode){
-    char charInCode;
-    
-    //TODO Might be an issue with while != EOF CHECK
-    // while((charInCode=fgetc(codeFile)) != EOF){
+    char charInCodeFile;
+
     for(int i = 0; i < lineOfCode->maxLineSize + 1; ++i){
-        charInCode = fgetc(codeFile);
+        charInCodeFile = readCharsFromFile(codeFile);
         
-        if(charInCode == EOF){
-            lineOfCode->continueReadingFile = false;
-            //Call function to check final line here.
-            return lineOfCode->continueReadingFile;
-        }
-        
-        //TODO Entire Program is off by 1 index because of not incrementing currentLineSize here
-        //Decide if you want to change this.
-        if(charInCode == '\n'){
+        if(charIsEndOfFileOrNewLine(charInCodeFile, lineOfCode)){
             break;
         }
         
-        lineOfCode->codeText[lineOfCode->lineSize] = charInCode;
-        ++lineOfCode->lineSize;
+        addCharInCodeFileToLineOfCode(lineOfCode, charInCodeFile);
 
         checkLineOfCodeSize(lineOfCode);
     }
 
-    lineOfCode->firstCharInLine = getFirstCharInLine(lineOfCode);
+    setFirstCharInLine(lineOfCode);
 
     return lineOfCode->continueReadingFile;
 }
 
+char readCharsFromFile(FILE* codeFile){
+    char charInCodeFile = fgetc(codeFile);
+
+    return charInCodeFile;
+}
+
+bool charIsEndOfFileOrNewLine(const char charInCodeFile, struct LineOfCode* lineOfCode){
+    if(charInCodeFile == EOF){
+        lineOfCode->continueReadingFile = false;
+    }
+    return (charInCodeFile == EOF || charInCodeFile =='\n');
+}
+
+void addCharInCodeFileToLineOfCode(struct LineOfCode* lineOfCode, const char charInCodeFile){
+    lineOfCode->codeText[lineOfCode->lineSize] = charInCodeFile;
+    ++lineOfCode->lineSize;
+}
+
 void checkLineOfCodeSize(const struct LineOfCode* lineOfCode){
     if(lineOfCodeExceeds100Chars(lineOfCode)){
-        printf("Fatal error: Line %lld exceeds limit of 100 characters."
-               " Correct your code and recompile.", lineOfCode->lineNumber);
+        printf("Fatal error: Line %lld exceeds limit of 100 characters. "
+               "Correct your code and recompile.", lineOfCode->lineNumber);
         exit(1);
     }
+}
+
+void setFirstCharInLine(struct LineOfCode* lineOfCode){
+    lineOfCode->firstCharInLine = getFirstCharInLine(lineOfCode);
 }
 
 bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode){
@@ -133,7 +133,6 @@ bool isComment(struct LineOfCode* lineOfCode){
     return false;
 }
 
-//lineOfCode->codeText and firstCharInLine add to struct?
 void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode){
     switch(lineOfCode->firstCharInLine){
         case 'w':
@@ -185,7 +184,6 @@ for(int charIndex = 0; charIndex < lineOfCode->lineSize-1; ++charIndex){
 }
 
 bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode){
-    //If increment for \n char is added this needs to change to currentLineSize-1
     if((lineOfCode->codeText[lineOfCode->lineSize-2] == ' ') && (lineOfCode->lineSize != 1)){
         return true;
     }
@@ -229,39 +227,50 @@ void auditParenthesisFormat(const struct LineOfCode* lineOfCode, const int charI
     if(((lineOfCode->codeText[charIndex] == '(') && (lineOfCode->codeText[charIndex+1] == ' '))){
         printf("Style error on line %lld: White space found after '('.\n", lineOfCode->lineNumber);
     }
-    else if((lineOfCode->codeText[charIndex] == ')') && (lineOfCode->codeText[charIndex-1] == ' ')){
-        printf("Style error on line %lld: White space found before ')'.\n", lineOfCode->lineNumber);
+    else if((lineOfCode->codeText[charIndex] == ')') 
+             && (lineOfCode->codeText[charIndex-1] == ' ')){
+                printf("Style error on line %lld: White space "
+                    "found before ')'.\n", lineOfCode->lineNumber);
     }
 }
 
 void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const int charIndex){
      switch(lineOfCode->codeText[charIndex]){
-                case '<':
-                case '>':
-                case '!':
-                    {   
-                        if(lineOfCode->codeText[charIndex-1] != ' '){
-                            printf("Style error on line %lld: White space not found before comparison operator.\n", lineOfCode->lineNumber);
-                        }
+        case '<':
+        case '>':
+        case '!':
+            {   
+                if(lineOfCode->codeText[charIndex-1] != ' '){
+                    printf("Style error on line %lld: White space not found before "
+                            "comparison operator.\n", lineOfCode->lineNumber);
+                }
 
-                        if((lineOfCode->codeText[charIndex+1] == '=' && lineOfCode->codeText[charIndex+2] != ' ')
-                           || (lineOfCode->codeText[charIndex+1] != ' ')){
-                            printf("Style error on line %lld: White space not found after comparison operator.\n", lineOfCode->lineNumber);
-                        }
-                    }
-                break;
-                case '=':
-                    {
-                        if(lineOfCode->codeText[charIndex+1] == '=' && lineOfCode->codeText[charIndex+2] != ' '){
-                            printf("Style error on line %lld: White space not found after '=='.\n", lineOfCode->lineNumber);
-                        }
-                        else if(lineOfCode->codeText[charIndex-1] == '=' && lineOfCode->codeText[charIndex-2] != ' '){
-                            printf("Style error on line %lld: White space not found before '=='.\n", lineOfCode->lineNumber);
-                        }
-                        else if(lineOfCode->codeText[charIndex+1] == ' ' && lineOfCode->codeText[charIndex-1] == ' '){
-                            printf("Style error on line %lld: Expected comparison operator. Assignment operator found.\n", lineOfCode->lineNumber);
-                        }
-                    }
+                if((lineOfCode->codeText[charIndex+1] == '=' 
+                    && lineOfCode->codeText[charIndex+2] != ' ')
+                    || (lineOfCode->codeText[charIndex+1] != ' ')){
+                        printf("Style error on line %lld: White space not found after " 
+                                "comparison operator.\n", lineOfCode->lineNumber);
+                }
+            }
+        break;
+        case '=':
+            {
+                if(lineOfCode->codeText[charIndex+1] == '=' 
+                    && lineOfCode->codeText[charIndex+2] != ' '){
+                        printf("Style error on line %lld: White space not "
+                                "found after '=='.\n", lineOfCode->lineNumber);
+                }
+                else if(lineOfCode->codeText[charIndex-1] == '=' 
+                    && lineOfCode->codeText[charIndex-2] != ' '){
+                        printf("Style error on line %lld: White space "
+                                "not found before '=='.\n", lineOfCode->lineNumber);
+                }
+                else if(lineOfCode->codeText[charIndex+1] == ' ' 
+                    && lineOfCode->codeText[charIndex-1] == ' '){
+                        printf("Style error on line %lld: Expected comparison operator. "
+                                "Assignment operator found.\n", lineOfCode->lineNumber);
+                }
+            }
 
     }
 }
@@ -273,7 +282,8 @@ bool isForLoop(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabNCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstFourCharsInLineOfCode, 
+    sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(forStringLiteral, firstFourCharsInLineOfCode);
 }
@@ -317,10 +327,12 @@ bool isSemiColon(const char charInLineOfCode){
 
 void auditSemiColonFormat(const struct LineOfCode* lineOfCode, const int charIndex){
     if(lineOfCode->codeText[charIndex-1] == ' '){
-        printf("Style error on line %lld: White space found before ';' on column %d.\n", lineOfCode->lineNumber, charIndex+1);
+        printf("Style error on line %lld: White space found before ';' "
+               "on column %d.\n", lineOfCode->lineNumber, charIndex+1);
     }
     else if(lineOfCode->codeText[charIndex+1] != ' '){
-        printf("Style error on line %lld: White space not found after ';' on column %d.\n", lineOfCode->lineNumber, charIndex+1);
+        printf("Style error on line %lld: White space not found after ';' "
+               "on column %d.\n", lineOfCode->lineNumber, charIndex+1);
     }
 }
 
@@ -331,7 +343,8 @@ bool isIfStatement(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabNCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstThreeCharsInLineOfCode, 
+    sizeof(firstThreeCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(ifStringLiteral, firstThreeCharsInLineOfCode);
 }
@@ -343,7 +356,8 @@ bool isElseStatement(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabNCharsFromString(lineOfCode, firstFourCharsInLineOfCode, sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstFourCharsInLineOfCode, 
+    sizeof(firstFourCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(elseStringLiteral, firstFourCharsInLineOfCode);
 }
@@ -359,7 +373,8 @@ void auditElseStatementFormat(const struct LineOfCode* lineOfCode){
             }
         }
         
-    printf("Style error on line %lld: \"{\" not found on same line as else statement.\n", lineOfCode->lineNumber);
+    printf("Style error on line %lld: \"{\" not found on same line "
+           "as else statement.\n", lineOfCode->lineNumber);
 }
 
 bool isElseIfStatement(const struct LineOfCode* lineOfCode){
@@ -369,7 +384,8 @@ bool isElseIfStatement(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabNCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstSevenCharsInLineOfCode, 
+    sizeof(firstSevenCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(elseIfStringLiteral, firstSevenCharsInLineOfCode);
 }
@@ -381,7 +397,8 @@ bool isWhileLoop(const struct LineOfCode* lineOfCode){
     
     int firstNonSpaceIndex = findFirstNonSpaceCharInLine(lineOfCode);
     
-    grabNCharsFromString(lineOfCode, firstSixCharsInLineOfCode, sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
+    grabNCharsFromString(lineOfCode, firstSixCharsInLineOfCode, 
+    sizeof(firstSixCharsInLineOfCode)-1, firstNonSpaceIndex);
     
     return isKeywordStatement(whileStringLiteral, firstSixCharsInLineOfCode);
 }
@@ -396,8 +413,8 @@ int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode){
     return 0;
 }
 
-//TODO rename and shrink parameters
-void grabNCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int firstNonEmptyindex){
+void grabNCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, 
+const int charsInLineOfCodeSize, const int firstNonEmptyindex){
     for(int charIndex = 0; charIndex < charsInLineOfCodeSize; ++charIndex){
         charsInLineOfCode[charIndex] = lineOfCode->codeText[firstNonEmptyindex+charIndex];
     }

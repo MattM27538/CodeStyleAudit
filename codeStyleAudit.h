@@ -12,7 +12,15 @@ FILE* openCodeFile(struct CodeFile* codeFile);
 
 bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
 
+char readCharsFromFile(FILE* codeFile);
+
+bool charIsEndOfFileOrNewLine(const char charInCodeFile, struct LineOfCode* lineOfCode);
+
+void addCharInCodeFileToLineOfCode(struct LineOfCode* lineOfCode, const char charInCodeFile);
+
 void checkLineOfCodeSize(const struct LineOfCode* lineOfCode);
+
+void setFirstCharInLine(struct LineOfCode* lineOfCode);
 
 bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode);
 
