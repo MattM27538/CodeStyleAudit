@@ -15,6 +15,16 @@ void testCorrectCMDLineInput(){
     TEST_ASSERT(correctCMDLineInput(INT_MAX) == false);
 }
 
+void testCharIsEndOfFileOrNewLine(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(charIsEndOfFileOrNewLine('\n', &lineOfCode) == true);
+    TEST_ASSERT(charIsEndOfFileOrNewLine(' ', &lineOfCode) == false);
+    TEST_ASSERT(charIsEndOfFileOrNewLine('p', &lineOfCode) == false);
+}
+
 void testGetFirstCharInLine(){
     struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
     .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
@@ -341,6 +351,8 @@ int main(){
     UNITY_BEGIN();
 
     RUN_TEST(testCorrectCMDLineInput);
+
+    RUN_TEST(testCharIsEndOfFileOrNewLine);
 
     RUN_TEST(testGetFirstCharInLine);
 
