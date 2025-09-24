@@ -26,6 +26,8 @@ bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode);
 
 void auditLine(struct LineOfCode* lineOfCode);
 
+bool isPartOfMultiLineComment(const struct LineOfCode* lineOfCode);
+
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode);
 
 char getFirstCharInLine(const struct LineOfCode* lineOfCode);

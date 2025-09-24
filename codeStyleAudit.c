@@ -85,13 +85,17 @@ void auditLine(struct LineOfCode* lineOfCode){
     if(!isComment(lineOfCode)){
         matchFirstCharInLineToInstruction(lineOfCode);
     }
-    else if(lineOfCode->isMultiLineComment){
+    else if(isPartOfMultiLineComment(lineOfCode)){
         checkForEndOfMultiLineComment(lineOfCode);
     }
 
     if(isWhiteSpaceAtEndOfLine(lineOfCode)){
         printf("Style error: Found trailing whitespace on line %lld\n", lineOfCode->lineNumber);
     }
+}
+
+bool isPartOfMultiLineComment(const struct LineOfCode* lineOfCode){
+    return lineOfCode->isMultiLineComment;
 }
 
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode){
