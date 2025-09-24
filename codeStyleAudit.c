@@ -84,6 +84,9 @@ bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode){
 void auditLine(struct LineOfCode* lineOfCode){
     if(!isComment(lineOfCode)){
         matchFirstCharInLineToInstruction(lineOfCode);
+        if(containsAssignmentOperator(lineOfCode)){
+            
+        }
     }
     else if(isPartOfMultiLineComment(lineOfCode)){
         checkForEndOfMultiLineComment(lineOfCode);
@@ -96,6 +99,21 @@ void auditLine(struct LineOfCode* lineOfCode){
 
 bool isPartOfMultiLineComment(const struct LineOfCode* lineOfCode){
     return lineOfCode->isMultiLineComment;
+}
+
+bool containsAssignmentOperator(const struct LineOfCode* lineOfCode){
+    for(int charIndex = 0; charIndex < lineOfCode->lineSize; ++charIndex){
+        if(lineOfCode->codeText[charIndex] == '='){
+            if(isComparisonOperator(lineOfCode->codeText[charIndex - 1]) 
+               || (lineOfCode->codeText[charIndex + 1] == '=')){
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode){

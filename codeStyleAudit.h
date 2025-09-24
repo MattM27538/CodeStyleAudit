@@ -28,6 +28,8 @@ void auditLine(struct LineOfCode* lineOfCode);
 
 bool isPartOfMultiLineComment(const struct LineOfCode* lineOfCode);
 
+bool containsAssignmentOperator(const struct LineOfCode* lineOfCode);
+
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode);
 
 char getFirstCharInLine(const struct LineOfCode* lineOfCode);
