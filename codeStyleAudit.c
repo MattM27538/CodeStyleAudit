@@ -85,7 +85,7 @@ void auditLine(struct LineOfCode* lineOfCode){
     if(!isComment(lineOfCode)){
         matchFirstCharInLineToInstruction(lineOfCode);
         if(containsAssignmentOperator(lineOfCode)){
-            
+            auditAssignmentOperatorFormat(lineOfCode);
         }
     }
     else if(isPartOfMultiLineComment(lineOfCode)){
@@ -114,6 +114,21 @@ bool containsAssignmentOperator(const struct LineOfCode* lineOfCode){
     }
 
     return false;
+}
+
+void auditAssignmentOperatorFormat(const struct LineOfCode* lineOfCode){
+    for(int charIndex = 0; charIndex < lineOfCode->lineSize; ++charIndex){
+        if(lineOfCode->codeText[charIndex] == '='){
+            if(lineOfCode->codeText[charIndex - 1] != ' '){
+                printf("Style error on line %lld: White space not found before "
+                       "assignment operator.\n", lineOfCode->lineNumber);
+            }
+            if(lineOfCode->codeText[charIndex + 1] != ' '){
+                printf("Style error on line %lld: White space not found after "
+                       "assignment operator.\n", lineOfCode->lineNumber);
+            }
+        }
+    }
 }
 
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode){

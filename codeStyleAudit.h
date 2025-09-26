@@ -30,6 +30,8 @@ bool isPartOfMultiLineComment(const struct LineOfCode* lineOfCode);
 
 bool containsAssignmentOperator(const struct LineOfCode* lineOfCode);
 
+void auditAssignmentOperatorFormat(const struct LineOfCode* lineOfCode);
+
 void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode);
 
 char getFirstCharInLine(const struct LineOfCode* lineOfCode);
