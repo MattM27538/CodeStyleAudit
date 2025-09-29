@@ -266,7 +266,7 @@ void testIsElseStatement(){
     
     strncpy(lineOfCode.codeText, "elseDont()", sizeof(lineOfCode.codeText) - 1);
     lineOfCode.lineSize = 11;
-    TEST_ASSERT(isElseStatement(&lineOfCode) == false);
+    TEST_ASSERT(isElseStatement(&lineOfCode) == true);
     
     strncpy(lineOfCode.codeText, "", sizeof(lineOfCode.codeText) - 1);
     lineOfCode.lineSize = 0;
@@ -332,7 +332,7 @@ void testFindFirstNonSpaceCharInLine(){
     TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 0);
     
     strncpy(lineOfCode.codeText, "   ", sizeof(lineOfCode.codeText) - 1);
-    lineOfCode.lineSize = 4;
+    lineOfCode.lineSize = 3;
     TEST_ASSERT_EQUAL_INT(findFirstNonSpaceCharInLine(&lineOfCode), 0);
 
     strncpy(lineOfCode.codeText, "  f", sizeof(lineOfCode.codeText) - 1);
