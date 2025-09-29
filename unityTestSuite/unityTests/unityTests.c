@@ -25,6 +25,18 @@ void testCharIsEndOfFileOrNewLine(){
     TEST_ASSERT(charIsEndOfFileOrNewLine('p', &lineOfCode) == false);
 }
 
+void testIsPartOfMultiLineComment(){
+    struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
+    .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
+    .firstCharInLine = '\n'};
+
+    TEST_ASSERT(isPartOfMultiLineComment(&lineOfCode) == false);
+
+    lineOfCode.isMultiLineComment = true;
+
+    TEST_ASSERT(isPartOfMultiLineComment(&lineOfCode) == true);
+}
+
 void testGetFirstCharInLine(){
     struct LineOfCode lineOfCode = {.codeText = "", .maxLineSize = 100, .lineSize = 0, 
     .lineNumber = 1, .continueReadingFile = true, .isMultiLineComment = false,
@@ -38,7 +50,7 @@ void testGetFirstCharInLine(){
     TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), 'f');
 
     strncpy(lineOfCode.codeText, "  ", sizeof(lineOfCode.codeText) - 1);
-    lineOfCode.lineSize = 3;
+    lineOfCode.lineSize = 2;
     TEST_ASSERT_EQUAL_CHAR(getFirstCharInLine(&lineOfCode), '\n');
 
     strncpy(lineOfCode.codeText, "//for", sizeof(lineOfCode.codeText) - 1);
@@ -353,6 +365,8 @@ int main(){
     RUN_TEST(testCorrectCMDLineInput);
 
     RUN_TEST(testCharIsEndOfFileOrNewLine);
+
+    RUN_TEST(testIsPartOfMultiLineComment);
 
     RUN_TEST(testGetFirstCharInLine);
 
