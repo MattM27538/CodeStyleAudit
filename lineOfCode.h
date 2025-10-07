@@ -6,14 +6,14 @@
 //Consider making this a singleton
 //TODO split into two classes? Or Remove unlinked variables.
 //TODO change name to lineoFCode add lineOfCode to struct as text or some other name
-struct LineOfCode{
+typedef struct{
     char codeText[100];
     const int8_t maxLineSize;
-    int8_t currentLineSize;
+    int8_t lineSize;
     long long lineNumber;
     bool continueReadingFile;
     bool isMultiLineComment;
     char firstCharInLine;
-};
+} LineOfCode;
 
 #endif

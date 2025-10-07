@@ -8,82 +8,82 @@
 
 bool correctCMDLineInput(int argc);
 
-FILE* openCodeFile(struct CodeFile* codeFile);
+FILE* openCodeFile(CodeFile* codeFile);
 
-bool readLine(FILE* codeFile, struct LineOfCode* lineOfCode);
+bool readLine(FILE* codeFile, LineOfCode* lineOfCode);
 
 char readCharsFromFile(FILE* codeFile);
 
-bool charIsEndOfFileOrNewLine(const char charInCodeFile, struct LineOfCode* lineOfCode);
+bool charIsEndOfFileOrNewLine(const char charInCodeFile, LineOfCode* lineOfCode);
 
-void addCharInCodeFileToLineOfCode(struct LineOfCode* lineOfCode, const char charInCodeFile);
+void addCharInCodeFileToLineOfCode(LineOfCode* lineOfCode, const char charInCodeFile);
 
-void checkLineOfCodeSize(const struct LineOfCode* lineOfCode);
+void checkLineOfCodeSize(const LineOfCode* lineOfCode);
 
-void setFirstCharInLine(struct LineOfCode* lineOfCode);
+void setFirstCharInLine(LineOfCode* lineOfCode);
 
-bool lineOfCodeExceeds100Chars(const struct LineOfCode* lineOfCode);
+bool lineOfCodeExceeds100Chars(const LineOfCode* lineOfCode);
 
-void auditLine(struct LineOfCode* lineOfCode);
+void auditLine(LineOfCode* lineOfCode);
 
-bool isPartOfMultiLineComment(const struct LineOfCode* lineOfCode);
+bool isPartOfMultiLineComment(const LineOfCode* lineOfCode);
 
-bool containsAssignmentOperator(const struct LineOfCode* lineOfCode);
+bool containsAssignmentOperator(const LineOfCode* lineOfCode);
 
-void auditAssignmentOperatorFormat(const struct LineOfCode* lineOfCode);
+void auditAssignmentOperatorFormat(const LineOfCode* lineOfCode);
 
-void updateLineOfCodeMetaData(struct LineOfCode* lineOfCode);
+void updateLineOfCodeMetaData(LineOfCode* lineOfCode);
 
-char getFirstCharInLine(const struct LineOfCode* lineOfCode);
+char getFirstCharInLine(const LineOfCode* lineOfCode);
 
-bool isComment(struct LineOfCode* lineOfCode);
+bool isComment(LineOfCode* lineOfCode);
 
-void matchFirstCharInLineToInstruction(struct LineOfCode* lineOfCode);
+void matchFirstCharInLineToInstruction(LineOfCode* lineOfCode);
 
-void checkForEndOfMultiLineComment(struct LineOfCode* lineOfCode);
+void checkForEndOfMultiLineComment(LineOfCode* lineOfCode);
 
-bool isWhiteSpaceAtEndOfLine(const struct LineOfCode* lineOfCode);
+bool isWhiteSpaceAtEndOfLine(const LineOfCode* lineOfCode);
 
-bool isStartOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex);
+bool isStartOfMultiLineComment(const LineOfCode* lineOfCode, const int charIndex);
 
-void setMultiLineCommentFlag(struct LineOfCode* lineOfCode);
+void setMultiLineCommentFlag(LineOfCode* lineOfCode);
 
-bool isEndOfMultiLineComment(const struct LineOfCode* lineOfCode, const int charIndex);
+bool isEndOfMultiLineComment(const LineOfCode* lineOfCode, const int charIndex);
 
-void resetMultiLineCommentFlag(struct LineOfCode* lineOfCode);
+void resetMultiLineCommentFlag(LineOfCode* lineOfCode);
 
 bool isParenthesis(const char charInLineOfCode);
 
-void auditParenthesisFormat(const struct LineOfCode* lineOfCode, const int charIndex);
+void auditParenthesisFormat(const LineOfCode* lineOfCode, const int charIndex);
 
-void auditComparisonOperatorFormat(const struct LineOfCode* lineOfCode, const int charIndex);
+void auditComparisonOperatorFormat(const LineOfCode* lineOfCode, const int charIndex);
 
-bool isForLoop(const struct LineOfCode* lineOfCode);
+bool isForLoop(const LineOfCode* lineOfCode);
 
-void auditForLoopFormat(const struct LineOfCode* lineOfCode);
+void auditForLoopFormat(const LineOfCode* lineOfCode);
 
 bool isComparisonOperator(const char charInLineOfCode);
 
 bool isSemiColon(const char charInLineOfCode);
 
-void auditSemiColonFormat(const struct LineOfCode* lineOfCode, const int charIndex);
+void auditSemiColonFormat(const LineOfCode* lineOfCode, const int charIndex);
 
-bool isIfStatement(const struct LineOfCode* lineOfCode);
+bool isIfStatement(const LineOfCode* lineOfCode);
 
-bool isElseStatement(const struct LineOfCode* lineOfCode);
+bool isElseStatement(const LineOfCode* lineOfCode);
 
-void auditElseStatementFormat(const struct LineOfCode* lineOfCode);
+void auditElseStatementFormat(const LineOfCode* lineOfCode);
 
-bool isElseIfStatement(const struct LineOfCode* lineOfCode);
+bool isElseIfStatement(const LineOfCode* lineOfCode);
 
-bool isWhileLoop(const struct LineOfCode* lineOfCode);
+bool isWhileLoop(const LineOfCode* lineOfCode);
 
-int findFirstNonSpaceCharInLine(const struct LineOfCode* lineOfCode);
+int findFirstNonSpaceCharInLine(const LineOfCode* lineOfCode);
 
-void grabNCharsFromString(const struct LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
+void grabNCharsFromString(const LineOfCode* lineOfCode, char* charsInLineOfCode, const int charsInLineOfCodeSize, const int index);
 
 bool isKeywordStatement(const char* keywordLiteral, const char* beginningOfLineOfCode);
 
-void auditConditionalStatementFormat(const struct LineOfCode* lineOfCode);
+void auditConditionalStatementFormat(const LineOfCode* lineOfCode);
 
 #endif
